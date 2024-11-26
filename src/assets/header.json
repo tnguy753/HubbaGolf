@@ -1,0 +1,88 @@
+{
+  "logo": {
+    "src": "/src/assets/images/hubba-golf-logo.png",
+    "height": 60
+  },
+  "menu": [
+    {
+      "title": "Home",
+      "link": "/"
+    },
+    {
+      "title": "Locations",
+      "link": "#",
+      "subMenu": [
+        {
+          "title": "Singapore",
+          "items": [{ "name": "Singapore", "link": "/courses" }]
+        },
+        {
+          "title": "Indonesia",
+          "items": [
+            { "name": "Bali", "link": "/courses" },
+            { "name": "Bandung", "link": "/courses" },
+            { "name": "Batam", "link": "/courses" },
+            { "name": "Bintan", "link": "/courses" },
+            { "name": "Bogor", "link": "/courses" },
+            { "name": "Jakarta", "link": "/courses" },
+            { "name": "Lombok", "link": "/courses" },
+            { "name": "Surabaya", "link": "/courses" }
+          ]
+        },
+        {
+          "title": "Malaysia",
+          "items": [
+            { "name": "Johor", "link": "/courses" },
+            { "name": "Kota Kinabalu", "link": "/courses" },
+            { "name": "Kuala Lumpur", "link": "/courses" },
+            { "name": "Kuching", "link": "/courses" },
+            { "name": "Langkawi", "link": "/courses" },
+            { "name": "Malacca", "link": "/courses" },
+            { "name": "Penang", "link": "/courses" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Courses",
+      "link": "#",
+      "subMenu": [
+        {
+          "title": "Outdoors",
+          "items": [
+            { "name": "Dalat", "link": "/courses" },
+            { "name": "Danang", "link": "/courses" },
+            { "name": "Halong Bay", "link": "/courses" }
+          ]
+        },
+        {
+          "title": "Simulator",
+          "items": [
+            { "name": "Johor", "link": "/courses" },
+            { "name": "Kota Kinabalu", "link": "/courses" },
+            { "name": "Kuala Lumpur", "link": "/courses" },
+            { "name": "Kuching", "link": "/courses" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Shop",
+      "link": "#"
+    },
+    {
+      "title": "Contact",
+      "link": "/contact"
+    },
+    {
+      "title": "Blog",
+      "link": "/news"
+    }
+  ],
+  "buttons": [
+    {
+      "text": "BOOK A TEE TIME",
+      "link": "/#form"
+    }
+  ]
+}

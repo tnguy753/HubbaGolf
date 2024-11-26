@@ -1,0 +1,15 @@
+/* Reset styles to ensure no white borders */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --blue: rgb(4, 123, 108);
+    --darkblue: #01676f;
+    --dark: #2f4858;
+    --white: #ffffff;
+}
