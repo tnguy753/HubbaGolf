@@ -5,6 +5,8 @@ import ViewAllNews from "./pages/ViewAllNews";
 import NewsDetail from "./pages/NewsDetail";
 import ContactPage from "./pages/Contact";
 import ViewAllCourses from "./pages/ViewAllCourses";
+import GolfCoursePage from "./pages/ViewDetailCourse";
+import BookingForm from "./pages/BookingForm";
 
 const App = () => {
   return (
@@ -14,6 +16,10 @@ const App = () => {
         <Route path="/" element={<Home />} />
 
         <Route path="/contact" element={<ContactPage />} />
+
+        <Route path="/courses/:city/:id" element={<GolfCoursePage />} />
+
+        <Route path="/courses/:city/:id/booking" element={<BookingForm />} />
 
         {/* Courses Page */}
         <Route path="/courses/:city" element={<ViewAllCourses />} />

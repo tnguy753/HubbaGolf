@@ -7,6 +7,7 @@ import shop1 from "./shop-1.png";
 import shop2 from "./shop-2.png";
 import shop3 from "./shop-3.png";
 import shop4 from "./shop-4.png";
+import facility5 from "./facility-5.png";
 
 const images = {
   logo,
@@ -18,6 +19,7 @@ const images = {
   shop2,
   shop3,
   shop4,
+  facility5,
 };
 
 export default images;

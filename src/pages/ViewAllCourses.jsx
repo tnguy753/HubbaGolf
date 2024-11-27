@@ -1,14 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { courses } from "../assets/courses.js";
+import { FaLocationArrow, FaLocationDot } from "react-icons/fa6";
 
 const CoursesContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 2rem;
   background-color: #f8f9fa;
 `;
 
@@ -18,21 +19,22 @@ const Heading = styled.h1`
   margin-bottom: 20px;
 `;
 
-const CoursesList = styled.div`
+export const CoursesList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 1.5rem;
   width: 100%;
   max-width: 1200px;
 `;
 
-const CoursesCard = styled.div`
+export const CoursesCard = styled.div`
   background: white;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  position: relative;
 
   img {
     width: 100%;
@@ -40,17 +42,37 @@ const CoursesCard = styled.div`
     object-fit: cover;
   }
 
+  .recommended {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: orange;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+
   div {
     padding: 15px;
     display: flex;
     flex-direction: column;
+    gap: 0.3rem;
   }
 
   h3 {
     font-size: 1.2rem;
-    color: #2d3748;
-    margin: 10px 0;
-    height: 60px;
+    height: 55px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  h4 {
+    color: var(--blue);
+    font-size: 1rem;
   }
 
   p {
@@ -58,76 +80,114 @@ const CoursesCard = styled.div`
     color: #718096;
   }
 
-  span {
-    margin-top: 10px;
-    font-size: 0.8rem;
-    color: #a0aec0;
-    align-self: flex-end;
-  }
-
-  button {
-    margin-top: 10px;
-    padding: 10px;
+  .location {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0;
     font-size: 0.9rem;
-    color: white;
-    background-color: var(--blue);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    color: var(--secondary);
 
-    &:hover {
-      background-color: var(--darkblue);
+    p {
+      color: var(--secondary);
     }
   }
 
-  .recommended {
-    background-color: orange;
-    color: white;
-    font-size: 0.8rem;
-    padding: 5px;
-    border-radius: 5px;
-    align-self: flex-start;
-  }
+  .call-to-action {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
 
-  .status-closed {
-    color: red;
-    font-weight: bold;
-    margin-top: 10px;
+    button {
+      padding: 0.5rem 2rem;
+      font-size: 1rem;
+      color: white;
+      background-color: var(--blue);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: var(--darkblue);
+      }
+    }
+
+    .status-closed {
+      color: red;
+      font-weight: bold;
+    }
+
+    .view-map {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.2rem;
+      color: var(--blue);
+      cursor: pointer;
+
+      a {
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+
+      &:hover {
+        color: var(--darkblue);
+      }
+    }
   }
 `;
+
 const ViewAllCourses = () => {
-  const navigate = useNavigate();
   const { city } = useParams();
+  const navigate = useNavigate();
 
   return (
     <>
       <Header />
-      {/* <Heading /> */}
+
       <CoursesContainer>
         <Heading>Golf In {city}</Heading>
+
         <CoursesList>
           {courses.map((course, index) => (
             <CoursesCard key={index}>
-              {/* Placeholder image for the golf course */}
               <img src={course.img} alt={course.name} />
+              {course.recommended && (
+                <span className="recommended">RECOMMENDED</span>
+              )}
+
               <div>
-                {course.recommended && (
-                  <span className="recommended">RECOMMENDED</span>
-                )}
                 <h3>{course.name}</h3>
-                <p>{course.price}</p>
+                <h4>{course.price}</h4>
+
+                <div className="location">
+                  <FaLocationDot />
+                  <p>{course.province}</p>
+                </div>
+
                 {course.details && (
                   <p>
                     {course.details.yards} yards | {course.details.type}
                   </p>
                 )}
-                {course.status === "Permanently Closed" ? (
-                  <span className="status-closed">Permanently Closed</span>
-                ) : (
-                  <button>Book</button>
-                )}
-                <button>View on Map</button>
+
+                <div className="call-to-action">
+                  {course.status === "Permanently Closed" ? (
+                    <span className="status-closed">Permanently Closed</span>
+                  ) : (
+                    <button onClick={() => navigate(`${course.id}`)}>
+                      Book
+                    </button>
+                  )}
+                  <div className="view-map">
+                    <FaLocationArrow />
+                    <a>View on Map</a>
+                  </div>
+                </div>
               </div>
             </CoursesCard>
           ))}

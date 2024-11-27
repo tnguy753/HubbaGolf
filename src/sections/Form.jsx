@@ -105,6 +105,7 @@ const InputGroup = styled.div`
     }
   }
 `;
+
 const ComboBoxWrapper = styled.div`
   position: relative;
   display: flex;

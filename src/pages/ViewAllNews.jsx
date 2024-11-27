@@ -3,11 +3,12 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { newsData } from "../assets/news";
 import Header from "../components/Header";
+
 const NewsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 2rem;
   background-color: #f8f9fa;
 `;
 

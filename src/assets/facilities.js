@@ -3,20 +3,20 @@ export const facilities = [
   {
     title: "Golf Courses",
     description: "Lorem ipsum dolor sit amet consectetur elit.",
-    img: images.facility1,
+    img: images.facility4,
   },
   {
-    title: "Pro Instructors",
+    title: "Golf Simulators",
     description: "Lorem ipsum dolor sit amet consectetur elit.",
     img: images.facility2,
   },
   {
-    title: "Superb Caddies",
+    title: "Golf Travel Packages",
     description: "Lorem ipsum dolor sit amet consectetur elit.",
-    img: images.facility3,
+    img: images.facility5,
   },
   {
-    title: "Membership",
+    title: "Golf Shopping",
     description: "Lorem ipsum dolor sit amet consectetur elit.",
     img: images.facility1,
   },
