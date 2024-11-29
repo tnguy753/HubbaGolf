@@ -21,7 +21,7 @@ const Home = () => {
       <About />
       <Courses />
       <Shop />
-      {/* <Articles /> */}
+
       <FormBooking />
       <Footer />
     </>

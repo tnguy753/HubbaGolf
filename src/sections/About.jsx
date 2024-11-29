@@ -27,6 +27,11 @@ const ContentWrapper = styled.div`
   @media (max-width: 375px) {
     padding: 2rem;
   }
+
+  .subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const CheckBoxWrapper = styled.div`
@@ -35,6 +40,8 @@ const CheckBoxWrapper = styled.div`
   align-items: center;
   gap: 0.5rem;
   padding-top: 1rem;
+  color: var(--blue);
+  font-weight: bold;
 `;
 
 const ImageWrapper = styled.div`
@@ -50,25 +57,52 @@ const About = () => {
     <AboutWrapper>
       <ContentWrapper>
         <SubTitle>About HubbaGolf</SubTitle>
-        <Heading>We Are The Best Golf Club In Your Local Area</Heading>
+        {/* <Heading>We Are The Best Golf Club In Your Local Area</Heading> */}
         <p>
-          We offer a lot of courses of varying difficulty and beautiful scenery
-          that golfers of all skill levels can enjoy. You will learn golf from
-          professionals with our competent and experienced staff. You will have
-          a great fun with our magnificent illuminated field.
+          Hubbagolf is a comprehensive one-stop platform designed to meet the
+          diverse needs of golf enthusiasts worldwide. It offers a seamless
+          experience for booking golf games and simulators, planning golf
+          vacations, and purchasing top-quality golf equipment—all from a
+          single, user-friendly interface.
         </p>
         <CheckBoxWrapper>
           <PiCheckCircleFill color="var(--blue)" size={"24px"} />
-          <p>Free Guide Book</p>
+          <p>Global Golf Game Booking</p>
         </CheckBoxWrapper>
+        <p className="subtitle">
+          Effortlessly book tee times at premier golf courses around the world.
+          Hubbagolf provides real-time availability and competitive rates,
+          ensuring a smooth and reliable reservation process.
+        </p>
+
         <CheckBoxWrapper>
           <PiCheckCircleFill color="var(--blue)" size={"24px"} />
-          <p>Group Membership Level</p>
+          <p>Golf Simulator Booking</p>
         </CheckBoxWrapper>
+        <p className="subtitle">
+          Reserve high-tech golf simulators for practice or fun. Hubbagolf
+          connects users with state-of-the-art facilities, perfect for honing
+          skills or enjoying virtual rounds with friends.
+        </p>
         <CheckBoxWrapper>
           <PiCheckCircleFill color="var(--blue)" size={"24px"} />
-          <p>24/7 Full Support</p>
+          <p>Golf Travel Packages</p>
         </CheckBoxWrapper>
+        <p className="subtitle">
+          Discover and book customized golf travel experiences. From luxurious
+          golf resorts to exclusive international tours, Hubbagolf curates
+          packages that cater to various preferences and budgets.
+        </p>
+        <CheckBoxWrapper>
+          <PiCheckCircleFill color="var(--blue)" size={"24px"} />
+          <p>Golf Equipment Shopping</p>
+        </CheckBoxWrapper>
+        <p className="subtitle">
+          Access a wide range of premium golf gear, including clubs, apparel,
+          and accessories. Hubbagolf partners with leading brands to offer
+          high-quality products, ensuring golfers have everything they need for
+          an exceptional game.
+        </p>
       </ContentWrapper>
       <ImageWrapper />
     </AboutWrapper>

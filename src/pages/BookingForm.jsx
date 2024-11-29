@@ -1,24 +1,16 @@
 import React, { useState } from "react";
+import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { Breadcrumbs } from "../components/index";
+import { Breadcrumbs, Container } from "../components/index";
 import images from "../assets/images";
 import { courses } from "../assets/courses.js";
 import { getDetailCourse } from "../helpers.js";
 import { FaInfoCircle } from "react-icons/fa";
-import { InputGroup, Form } from "../components/index";
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-`;
-
+import { InputGroup, FormWrapper } from "../components/index";
+import LoadingPage from "./LoadingPage.jsx";
+import { config } from "../assets/config.js";
 const BookingGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 0.8fr;
@@ -243,16 +235,42 @@ const RateIncludes = styled.div`
 
 const BookingForm = () => {
   const { city, id } = useParams();
-  const [inputFields, setInputFields] = useState({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   // Get the courseDetail detail based on the `id`
   const courseDetail = getDetailCourse(courses, id);
   const handleChange = (e) => {
     setInputFields({ ...inputFields, [e.target.id]: e.target.value });
   };
+  const [inputFields, setInputFields] = useState({
+    Country: city,
+    Course: courseDetail.name,
+    PlayerNumber: 1,
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    fetch(config.post_add_event, {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inputFields),
+    })
+      .then((res) => res.json())
+      .then(
+        (json) => (
+          navigate(`/payment/${json.data.orderNumber}`), setLoading(false)
+        )
+      )
+      .catch((err) => (alert(err), setLoading(false)));
+  };
+
   return (
     <>
-      {" "}
+      {loading && <LoadingPage />}
       <Header />
       <Container>
         <Breadcrumbs>
@@ -267,81 +285,109 @@ const BookingForm = () => {
         </Breadcrumbs>
 
         <BookingGrid>
-          {/* Left Column - Personal Details & Payment */}
-          <LeftColumn>
-            <Section>
-              <h2>Personal Details</h2>
-              <Form>
-                <InputGroup>
-                  <label htmlFor="Name">Your Name</label>
-                  <input
-                    required
-                    type="text"
-                    id="Name"
-                    placeholder="Enter your name"
-                    onChange={handleChange}
-                  />
-                </InputGroup>
+          <form onSubmit={handleSubmit}>
+            {/* Left Column - Personal Details & Payment */}
+            <LeftColumn>
+              <Section>
+                <h2>Booking Details</h2>
+                <FormWrapper>
+                  <InputGroup>
+                    <label htmlFor="StartDate">Start Date</label>
+                    <input
+                      required
+                      type="date"
+                      id="StartDate"
+                      onChange={handleChange}
+                    />
+                  </InputGroup>
 
-                <InputGroup>
-                  <label htmlFor="Email">Email</label>
-                  <input
-                    required
-                    type="text"
-                    id="Email"
-                    placeholder="Enter your email"
-                    onChange={handleChange}
-                  />
-                </InputGroup>
-                <InputGroup>
-                  <label htmlFor="Phone">Phone</label>
-                  <input
-                    required
-                    type="tel"
-                    id="Phone"
-                    placeholder="Enter your phone"
-                    onChange={handleChange}
-                  />
-                </InputGroup>
-                <InputGroup>
-                  <label htmlFor="Note">Special Request</label>
-                  <input
-                    required
-                    type="text"
-                    id="Note"
-                    placeholder="Airport Transfers, etc"
-                    onChange={handleChange}
-                  />
-                </InputGroup>
-              </Form>
-            </Section>
+                  <InputGroup>
+                    <label htmlFor="PlayerNumber">Number of Players</label>
+                    <select
+                      id="PlayerNumber"
+                      onChange={handleChange}
+                      defaultValue={"1"}
+                    >
+                      {Array.from({ length: 8 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {i + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </InputGroup>
 
-            <ReservationInfo>
-              <div className="info">
-                <div className="icon-info">
-                  <FaInfoCircle />
+                  <InputGroup>
+                    <label htmlFor="Name">Your Name</label>
+                    <input
+                      required
+                      type="text"
+                      id="Name"
+                      placeholder="Enter your name"
+                      onChange={handleChange}
+                    />
+                  </InputGroup>
+
+                  <InputGroup>
+                    <label htmlFor="Email">Email</label>
+                    <input
+                      required
+                      type="text"
+                      id="Email"
+                      placeholder="Enter your email"
+                      onChange={handleChange}
+                    />
+                  </InputGroup>
+
+                  <InputGroup>
+                    <label htmlFor="Phone">Phone</label>
+                    <input
+                      required
+                      type="tel"
+                      id="Phone"
+                      placeholder="Enter your phone"
+                      onChange={handleChange}
+                    />
+                  </InputGroup>
+
+                  <InputGroup>
+                    <label htmlFor="Note">Special Request</label>
+                    <input
+                      type="text"
+                      id="Note"
+                      placeholder="Airport Transfers, etc"
+                      onChange={handleChange}
+                    />
+                  </InputGroup>
+                </FormWrapper>
+              </Section>
+
+              <ReservationInfo>
+                <div className="info">
+                  <div className="icon-info">
+                    <FaInfoCircle />
+                  </div>
+                  <p>This course can only be booked 7 days in advance</p>
                 </div>
-                <p>This course can only be booked 7 days in advance</p>
-              </div>
-              <div className="info">
-                <div className="icon-info">
-                  <FaInfoCircle />
+                <div className="info">
+                  <div className="icon-info">
+                    <FaInfoCircle />
+                  </div>
+
+                  <p>
+                    Offered tee times are provisional pending full payment. Your
+                    tee time may be changed if payment is delayed.
+                  </p>
                 </div>
 
                 <p>
-                  Offered tee times are provisional pending full payment. Your
-                  tee time may be changed if payment is delayed.
+                  You agree with the golfscape <a href="#">Terms of Use</a> by
+                  completing this booking.
                 </p>
-              </div>
-
-              <p>
-                You agree with the golfscape <a href="#">Terms of Use</a> by
-                completing this booking.
-              </p>
-              <button>Book Now for {courseDetail.price}</button>
-              <small>You will receive an instant confirmation</small>
-            </ReservationInfo>
-          </LeftColumn>
+                <button type="submit">Book Now for {courseDetail.price}</button>
+                <small>You will receive an instant confirmation</small>
+              </ReservationInfo>
+            </LeftColumn>
+          </form>
 
           {/* Right Column - Booking Summary */}
           <RightColumn>
@@ -354,13 +400,15 @@ const BookingForm = () => {
               <p>{courseDetail.province}</p>
               <BookingDetails>
                 <div>
-                  <span>Date:</span> Wednesday, 4 December 2024
+                  <span>Date:</span>{" "}
+                  {moment(inputFields.StartDate).format("MMMM Do YYYY")}
                 </div>
+                {/* <div>
+                  <span>Time:</span>{" "}
+                  {moment(inputFields.StartDate).format("h:mm:ss a")} (18 Holes)
+                </div> */}
                 <div>
-                  <span>Time:</span> 8:40 AM (18 Holes)
-                </div>
-                <div>
-                  <span>Player:</span> 1
+                  <span>Player:</span> {inputFields.PlayerNumber}
                 </div>
                 <div>
                   <span>Total:</span> {courseDetail.price}
@@ -369,12 +417,12 @@ const BookingForm = () => {
                   <small>Includes VAT (5%): SGD9 (THB13,21)</small>
                 </div>
               </BookingDetails>
-              <PromoCode>
+              {/* <PromoCode>
                 <select>
                   <option>Discount</option>
                 </select>
                 <input type="text" placeholder="Promo Code" />
-              </PromoCode>
+              </PromoCode> */}
               <RateIncludes>
                 <h4>Rate Includes / Notes</h4>
                 <ul>

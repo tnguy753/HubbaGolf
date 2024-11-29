@@ -7,6 +7,9 @@ import ContactPage from "./pages/Contact";
 import ViewAllCourses from "./pages/ViewAllCourses";
 import GolfCoursePage from "./pages/ViewDetailCourse";
 import BookingForm from "./pages/BookingForm";
+import Tracking from "./pages/Tracking";
+import OrderDetails from "./pages/OrderDetails";
+import PaymentResponse from "./pages/PaymentResponse";
 
 const App = () => {
   return (
@@ -14,6 +17,8 @@ const App = () => {
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<Home />} />
+
+        <Route path="/payment/:orderId" element={<PaymentResponse />} />
 
         <Route path="/contact" element={<ContactPage />} />
 
@@ -23,6 +28,9 @@ const App = () => {
 
         {/* Courses Page */}
         <Route path="/courses/:city" element={<ViewAllCourses />} />
+
+        <Route path="/manage-my-booking" element={<Tracking />} />
+        <Route path="/manage-my-booking/:orderId" element={<OrderDetails />} />
 
         {/* News Page */}
         <Route path="/news" element={<ViewAllNews />} />

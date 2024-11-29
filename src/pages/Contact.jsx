@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "../components/Header";
+import { ColumnForm, InputGroup } from "../components";
 
 const ContactPageWrapper = styled.div`
   display: flex;
@@ -33,41 +34,6 @@ const Heading = styled.h1`
   text-align: center;
   color: #2d3748;
   margin-bottom: 20px;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  label {
-    font-size: 0.9rem;
-    color: #4a5568;
-    margin-bottom: 5px;
-  }
-
-  input,
-  textarea {
-    padding: 10px;
-    font-size: 0.9rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 5px;
-    outline: none;
-
-    &:focus {
-      border-color: #22c55e;
-    }
-  }
-
-  textarea {
-    resize: none;
-    height: 100px;
-  }
 `;
 
 const SubmitButton = styled.button`
@@ -117,7 +83,7 @@ const ContactPage = () => {
       <ContactPageWrapper>
         <ContactCard>
           <Heading>Contact Us</Heading>
-          <Form onSubmit={handleSubmit}>
+          <ColumnForm onSubmit={handleSubmit}>
             <InputGroup>
               <label htmlFor="name">Your Name</label>
               <input
@@ -154,7 +120,7 @@ const ContactPage = () => {
               ></textarea>
             </InputGroup>
             <SubmitButton type="submit">Send Message</SubmitButton>
-          </Form>
+          </ColumnForm>
           <FooterText>We’ll get back to you within 24 hours.</FooterText>
         </ContactCard>
       </ContactPageWrapper>

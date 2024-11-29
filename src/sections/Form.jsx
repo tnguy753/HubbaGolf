@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { SubTitle, Heading } from "../components/index";
 import LoadingPage from "../pages/LoadingPage";
 import styled from "styled-components";
-
+import { InputGroup, FormWrapper } from "../components/index";
 import { Modal } from "../components/Modal";
+import { courses } from "../assets/courses";
+import { config } from "../assets/config";
 
 // Styled Components
 const Container = styled.div`
@@ -72,99 +74,6 @@ const Header = styled.h1`
   }
 `;
 
-const Form = styled.form`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  label {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    color: #4a5568;
-  }
-
-  input,
-  select {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 5px;
-    outline: none;
-
-    &:focus {
-      border-color: #22c55e;
-    }
-  }
-`;
-
-const ComboBoxWrapper = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-
-  label {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    color: #4a5568;
-  }
-`;
-
-const TextInput = styled.input`
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 5px;
-  outline: none;
-  width: 100%;
-
-  &:focus {
-    border-color: #22c55e;
-  }
-`;
-
-const DropdownList = styled.ul`
-  position: absolute;
-  top: calc(100% + 5px);
-  left: 0;
-  width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 1px solid #e2e8f0;
-  border-radius: 5px;
-  background-color: white;
-  z-index: 10;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const DropdownItem = styled.li`
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
-
-  img {
-    width: 20px;
-    height: 15px;
-    margin-right: 10px;
-  }
-`;
 const SubmitButton = styled.button`
   grid-column: span 2;
   padding: 12px;
@@ -185,39 +94,108 @@ const SubmitButton = styled.button`
     grid-column: span 1;
   }
 `;
+const DropdownWrapper = styled.div`
+  position: relative;
+  width: 250px;
+  font-family: Arial, sans-serif;
+`;
 
+const SelectedOption = styled.div`
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fff;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+      width: 20px;
+      height: 15px;
+      border-radius: 3px;
+    }
+  }
+`;
+
+const DropdownList = styled.ul`
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  background-color: #fff;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  li {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    img {
+      width: 20px;
+      height: 15px;
+      border-radius: 3px;
+    }
+  }
+`;
 const FormBooking = () => {
   const [inputFields, setInputFields] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("success");
   const [modalMessage, setModalMessage] = useState("");
   const [countryList, setCountryList] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleInputChange = (e) => {
-    setSearchValue(e.target.value);
-    setIsDropdownOpen(true);
-  };
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleSelectCountry = (country) => {
-    setSelectedCountry(country.name.common);
-    setSearchValue(country.name.common);
+  const selectOption = (country) => {
+    setSelected(country);
     setInputFields({ ...inputFields, Country: country.name.common });
-    setIsDropdownOpen(false);
+    setIsOpen(false);
   };
 
-  const filteredCountries = countryList.filter((country) =>
-    country.name.common.toLowerCase().includes(searchValue.toLowerCase())
+  const golfCountries = countryList.filter((country) =>
+    ["indonesia", "singapore", "malaysia"].includes(
+      country.name.common.toLowerCase()
+    )
   );
+
+  const [selected, setSelected] = useState(
+    golfCountries[0] || {
+      name: { common: "Select country" },
+      flags: { png: "" },
+    }
+  );
+
   const handleChange = (e) => {
     setInputFields({ ...inputFields, [e.target.id]: e.target.value });
   };
 
-  const showSuccess = () => {
-    setModalMessage("You have successfully booked!");
+  const showSuccess = (orderID) => {
+    setModalMessage(
+      `You have successfully booked!. Your order number is #${orderID}`
+    );
     setModalType("success");
     setIsModalOpen(true);
   };
@@ -229,7 +207,7 @@ const FormBooking = () => {
   };
 
   const fetchCountry = () => {
-    fetch("https://restcountries.com/v3.1/all?fields=name,flags", {
+    fetch(config.get_country, {
       method: "GET",
     })
       .then((res) => res.json()) // Parse the response to JSON
@@ -244,7 +222,7 @@ const FormBooking = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    fetch("https://webgolfadmin.azurewebsites.net/Home/AddEvent", {
+    fetch(config.post_add_event, {
       method: "POST",
       headers: {
         Accept: "application/json, text/plain, */*",
@@ -252,7 +230,8 @@ const FormBooking = () => {
       },
       body: JSON.stringify(inputFields),
     })
-      .then((res) => (showSuccess(), setLoading(false)))
+      .then((res) => res.json())
+      .then((json) => (showSuccess(json.data.orderNumber), setLoading(false)))
       .catch((err) => (showError(), setLoading(false)));
   };
 
@@ -269,115 +248,121 @@ const FormBooking = () => {
           <Header>Book a Tee Time</Header>
 
           {loading && <LoadingPage />}
-          <Form onSubmit={handleSubmit}>
-            <InputGroup>
-              <label htmlFor="Name">Your Name</label>
-              <input
-                required
-                type="text"
-                id="Name"
-                placeholder="Enter your name"
-                onChange={handleChange}
-              />
-            </InputGroup>
+          <form onSubmit={handleSubmit}>
+            <FormWrapper>
+              <InputGroup>
+                <label htmlFor="Name">Your Name</label>
+                <input
+                  required
+                  type="text"
+                  id="Name"
+                  placeholder="Enter your name"
+                  onChange={handleChange}
+                />
+              </InputGroup>
 
-            <InputGroup>
-              <label htmlFor="Phone">Phone</label>
-              <input
-                required
-                type="tel"
-                id="Phone"
-                placeholder="Enter your phone"
-                onChange={handleChange}
-              />
-            </InputGroup>
+              <InputGroup>
+                <label htmlFor="Phone">Phone</label>
+                <input
+                  required
+                  type="tel"
+                  id="Phone"
+                  placeholder="Enter your phone"
+                  onChange={handleChange}
+                />
+              </InputGroup>
 
-            <InputGroup>
-              <label htmlFor="Email">Email</label>
-              <input
-                required
-                type="email"
-                id="Email"
-                placeholder="Enter your email"
-                onChange={handleChange}
-              />
-            </InputGroup>
+              <InputGroup>
+                <label htmlFor="Email">Email</label>
+                <input
+                  required
+                  type="email"
+                  id="Email"
+                  placeholder="Enter your email"
+                  onChange={handleChange}
+                />
+              </InputGroup>
 
-            <InputGroup>
-              <label htmlFor="PlayerNumber">Number of Players</label>
-              <select
-                id="PlayerNumber"
-                onChange={handleChange}
-                defaultValue={"1"}
-              >
-                {Array.from({ length: 8 }, (_, i) => (
-                  <option key={i} value={i}>
-                    {i}
-                  </option>
-                ))}
-              </select>
-            </InputGroup>
-
-            <ComboBoxWrapper>
-              <label htmlFor="Country">Country</label>
-              <TextInput
-                id="Country"
-                placeholder="Search or select a country"
-                value={searchValue}
-                onChange={handleInputChange}
-                onFocus={() => setIsDropdownOpen(true)}
-              />
-              {isDropdownOpen && filteredCountries.length > 0 && (
-                <DropdownList>
-                  {filteredCountries.map((country, index) => (
-                    <DropdownItem
-                      key={index}
-                      onClick={() => handleSelectCountry(country)}
-                    >
-                      <img
-                        src={country.flags.png}
-                        alt={`${country.name.common} flag`}
-                      />
-                      {country.name.common}
-                    </DropdownItem>
+              <InputGroup>
+                <label htmlFor="PlayerNumber">Number of Players</label>
+                <select
+                  id="PlayerNumber"
+                  onChange={handleChange}
+                  defaultValue={"1"}
+                >
+                  {Array.from({ length: 8 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
                   ))}
-                </DropdownList>
-              )}
-            </ComboBoxWrapper>
+                </select>
+              </InputGroup>
 
-            <InputGroup>
-              <label htmlFor="Course">Golf Courses </label>
-              <select id="Course" onChange={handleChange} defaultValue={"1"}>
-                {Array.from({ length: 8 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    No. {i + 1}
-                  </option>
-                ))}
-              </select>
-            </InputGroup>
+              <InputGroup>
+                {" "}
+                <label htmlFor="Country">Country</label>
+                <DropdownWrapper>
+                  <SelectedOption onClick={toggleDropdown}>
+                    <span>
+                      {!selected?.flags?.png ? undefined : (
+                        <img
+                          src={selected?.flags?.png}
+                          alt={`${selected?.name?.common} flag`}
+                        />
+                      )}
 
-            <InputGroup>
-              <label htmlFor="StartDate">Start Date</label>
-              <input
-                required
-                type="datetime-local"
-                id="StartDate"
-                onChange={handleChange}
-              />
-            </InputGroup>
+                      {selected?.name?.common}
+                    </span>
+                    <span>&#9662;</span> {/* Down arrow */}
+                  </SelectedOption>
+                  {isOpen && (
+                    <DropdownList>
+                      {golfCountries.map((country, index) => (
+                        <li key={index} onClick={() => selectOption(country)}>
+                          <img
+                            src={country.flags.png}
+                            alt={`${country.name.common} flag`}
+                          />
+                          {country.name.common}
+                        </li>
+                      ))}
+                    </DropdownList>
+                  )}
+                </DropdownWrapper>
+              </InputGroup>
 
-            <InputGroup>
-              <label htmlFor="EndDate">End Date</label>
-              <input
-                required
-                type="datetime-local"
-                id="EndDate"
-                onChange={handleChange}
-              />
-            </InputGroup>
+              <InputGroup>
+                <label htmlFor="Course">Golf Courses </label>
+                <select id="Course" onChange={handleChange} defaultValue={"1"}>
+                  {courses.map((course, index) => (
+                    <option key={index}>{course.name}</option>
+                  ))}
+                </select>
+              </InputGroup>
 
-            <SubmitButton type="submit">Book Now!</SubmitButton>
-          </Form>
+              <InputGroup>
+                <label htmlFor="StartDate">Start Date</label>
+                <input
+                  required
+                  type="date"
+                  id="StartDate"
+                  onChange={handleChange}
+                />
+              </InputGroup>
+
+              <InputGroup>
+                <label htmlFor="EndDate">End Date</label>
+                <input
+                  required
+                  type="date"
+                  id="EndDate"
+                  onChange={handleChange}
+                />
+              </InputGroup>
+
+              <SubmitButton type="submit">Book Now!</SubmitButton>
+            </FormWrapper>
+          </form>
         </FormSection>
       </BookingCard>
 

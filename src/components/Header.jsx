@@ -1,24 +1,29 @@
 import React, { useState } from "react";
-import images from "../assets/images";
 import styled from "styled-components";
 import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
+import images from "../assets/images";
 import headerData from "../assets/header.json";
 
 const HeaderWrapper = styled.header`
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding: 1rem 2rem;
   background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
-  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem 4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0rem 4rem;
+  transition: all 0.3s ease;
 
   @media (max-width: 930px) {
-    padding: 1rem 2rem 1rem 1rem;
+    padding: 1rem 2rem;
+  }
+`;
+
+const Logo = styled.a`
+  img {
+    height: 50px;
   }
 `;
 
@@ -34,128 +39,106 @@ const HamburgerMenu = styled.div`
 
 const NavBar = styled.nav`
   display: flex;
-  gap: 1.5rem;
-  z-index: 1000;
-  padding: 1.5rem;
+  align-items: center;
+  gap: 2rem;
+
   @media (max-width: 930px) {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    background: white;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
+    flex-direction: column;
+    background: white;
     padding: 1rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: ${({ isOpen }) =>
-      isOpen ? "translateY(0)" : "translateY(-100%)"};
+      isOpen ? "translateY(0)" : "translateY(-200%)"};
     opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
     visibility: ${({ isOpen }) => (isOpen ? "visible" : "hidden")};
-    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
 `;
 
 const NavMenu = styled.ul`
   display: flex;
+  gap: 2rem;
   list-style: none;
+
+  @media (max-width: 930px) {
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    text-align: center;
+  }
 `;
 
-const NavItem = styled.li`
-  margin: 0 1rem;
+const NavItemWrapper = styled.div`
+  position: relative; /* Ensures the mega menu is positioned relative to this */
+  z-index: 1000; /* Keeps it below the mega menu */
+`;
+
+const NavItem = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
 
   a {
+    text-decoration: none;
     font-size: 1rem;
     font-weight: 600;
-    padding: 0.5rem 0;
     color: #000;
-    text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.3s;
 
     &:hover {
       color: var(--blue);
     }
   }
-`;
 
-const Button = styled.a`
-  text-decoration: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  color: #ffffff;
-  background-color: var(--blue);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: var(--darkblue);
-  }
-
-  @media (max-width: 930px) {
-    margin-top: 1rem;
-    display: none;
+  svg {
+    transition: transform 0.3s;
+    ${({ isHovered }) => isHovered && "transform: rotate(180deg);"}
   }
 `;
 
-const MobileButton = styled.a`
-  text-decoration: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  color: #ffffff;
-  background-color: var(--blue);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  display: none;
-  &:hover {
-    background-color: var(--darkblue);
-  }
-
-  @media (max-width: 930px) {
-    margin-top: 1rem;
-    display: flex;
-  }
-`;
 const MegaMenu = styled.div`
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
-  position: absolute;
+  position: absolute; /* Make it overlay other content */
   display: flex;
+  flex-direction: column; /* Stack content for smaller screens */
   gap: 1rem;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 100%; /* Position below the parent menu item */
+  left: 0; /* Align with the left edge of the parent */
   background-color: #fff;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   padding: 1rem;
-  width: 600px;
-
-  justify-content: flex-start;
-  z-index: 100;
-  margin-top: 1rem;
-  border-bottom: 3px var(--blue) solid;
+  z-index: 200; /* Ensure it appears above other elements */
   border-radius: 8px;
+  width: 100%; /* Make it responsive on smaller screens */
+  max-height: 70vh; /* Prevent it from taking the full screen */
+  overflow-y: auto; /* Add scroll for overflowing content */
   transition: visibility 0.2s ease, opacity 0.2s ease;
-`;
 
-const NavItemWrapper = styled.div`
-  position: relative;
+  @media (min-width: 930px) {
+    flex-direction: row; /* Restore horizontal layout for desktop */
+    top: 100%; /* Desktop alignment */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px; /* Specific width for larger screens */
+    max-height: none; /* No restriction on height for desktop */
+    overflow-y: visible;
+  }
 `;
 
 const MenuColumn = styled.div`
-  width: 30%;
+  flex: 1;
 
   h4 {
     font-size: 0.9rem;
-    color: var(--darkblue);
     text-transform: uppercase;
-    margin-bottom: 1rem;
+    color: var(--darkblue);
+    margin-bottom: 0.5rem;
   }
 
   ul {
@@ -166,10 +149,10 @@ const MenuColumn = styled.div`
       margin-bottom: 0.5rem;
 
       a {
-        color: #000;
-        font-size: 0.9rem;
         text-decoration: none;
-        transition: color 0.3s ease;
+        font-size: 0.9rem;
+        color: #000;
+        transition: color 0.3s;
 
         &:hover {
           color: var(--blue);
@@ -179,32 +162,43 @@ const MenuColumn = styled.div`
   }
 `;
 
+const Button = styled.a`
+  padding: 0.8rem 1.5rem;
+  text-decoration: none;
+  font-size: 1rem;
+  color: white;
+  background: var(--blue);
+  border-radius: 5px;
+  transition: background 0.3s;
+
+  &:hover {
+    background: var(--darkblue);
+  }
+
+  @media (max-width: 930px) {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+`;
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const handleMouseEnter = (index) => {
-    setHoveredIndex(index);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-  };
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const handleMouseEnter = (index) => setHoveredIndex(index);
+  const handleMouseLeave = () => setHoveredIndex(null);
 
   return (
     <HeaderWrapper>
-      <a href="/">
-        <img src={images.logo} height={headerData.logo.height} alt="Logo" />
-      </a>
-
+      <Logo href="/">
+        <img src={images.logo} alt="Logo" />
+      </Logo>
       <HamburgerMenu onClick={toggleMenu}>
         {isMenuOpen ? <FaTimes /> : <FaBars />}
       </HamburgerMenu>
-
       <NavBar isOpen={isMenuOpen}>
         <NavMenu>
           {headerData.menu.map((menuItem, index) => (
@@ -213,38 +207,38 @@ const Header = () => {
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
             >
-              <NavItem>
+              <NavItem isHovered={hoveredIndex === index}>
                 <a href={menuItem.link}>{menuItem.title}</a>
-                {menuItem.subMenu && (
-                  <>
-                    <FaChevronDown size={"12px"} />
-                    <MegaMenu isVisible={hoveredIndex === index}>
-                      {menuItem.subMenu.map((subMenuItem, subIndex) => (
-                        <MenuColumn key={subIndex}>
-                          <h4>{subMenuItem.title}</h4>
-                          <ul>
-                            {subMenuItem.items.map((item, itemIndex) => (
-                              <li key={itemIndex}>
-                                <a href={`${item.link}/${item.name}`}>
-                                  {item.name}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </MenuColumn>
-                      ))}
-                    </MegaMenu>
-                  </>
-                )}
+                {menuItem.subMenu && <FaChevronDown />}
               </NavItem>
+              {menuItem.subMenu && (
+                <MegaMenu isVisible={hoveredIndex === index}>
+                  {menuItem.subMenu.map((subMenu, subIndex) => (
+                    <MenuColumn key={subIndex}>
+                      <h4>{subMenu.title}</h4>
+                      <ul>
+                        {subMenu.items.map((item, itemIndex) => (
+                          <li key={itemIndex}>
+                            <a href={`${item.link}/${item.name}`}>
+                              {item.name}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </MenuColumn>
+                  ))}
+                </MegaMenu>
+              )}
             </NavItemWrapper>
           ))}
         </NavMenu>
-      </NavBar>
 
-      {headerData.buttons.map((button, index) => (
-        <Button href={button.link}>{button.text}</Button>
-      ))}
+        {headerData.buttons.map((button, index) => (
+          <Button key={index} href={button.link}>
+            {button.text}
+          </Button>
+        ))}
+      </NavBar>
     </HeaderWrapper>
   );
 };

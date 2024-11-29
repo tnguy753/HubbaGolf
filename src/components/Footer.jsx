@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import { FaFacebookF, FaSkype, FaWhatsapp } from "react-icons/fa";
-import { IoIosSend } from "react-icons/io";
+
 // Styled Components
 const FooterContainer = styled.footer`
   background-color: var(--blue);
   color: #ffffff;
-  padding: 40px 20px;
+  padding: 2rem 4rem;
 `;
 
 const FooterWrapper = styled.div`
@@ -38,6 +38,7 @@ const Section = styled.div`
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 15px;
+    text-align: justify;
   }
 `;
 
@@ -74,40 +75,6 @@ const ContactInfo = styled.div`
   }
 `;
 
-const Newsletter = styled.div`
-  form {
-    display: flex;
-    ::placeholder {
-      color: white;
-      opacity: 1; /* Firefox */
-    }
-  }
-  input {
-    padding: 10px;
-    width: 100%;
-    max-width: 300px;
-    border: 1px white solid;
-    border-radius: 4px 0px 0 4px;
-    background: transparent;
-    color: white;
-  }
-
-  button {
-    background-color: var(--white);
-    color: var(--blue);
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-`;
-
 const SocialLinks = styled.div`
   display: flex;
   gap: 1rem;
@@ -118,6 +85,7 @@ const SocialLinks = styled.div`
     color: #ffffff;
     font-size: 1.3rem;
     display: flex;
+
     align-items: center;
     transition: color 0.3s;
     width: 30px;
@@ -155,8 +123,8 @@ const Footer = () => {
         <Section>
           <h3>HubbaGolf</h3>
           <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry...
+            Hubbagolf is a comprehensive one-stop platform designed to meet the
+            diverse needs of golf enthusiasts worldwide.
           </p>
           <SocialLinks>
             <a href="#" aria-label="Facebook">
@@ -170,7 +138,6 @@ const Footer = () => {
             </a>
           </SocialLinks>
         </Section>
-
         <Section>
           <h3>Quick Links</h3>
           <Links>
@@ -191,7 +158,6 @@ const Footer = () => {
             </li>
           </Links>
         </Section>
-
         <Section>
           <h3>Address</h3>
           <ContactInfo>
@@ -202,19 +168,6 @@ const Footer = () => {
             </p>
             <p>285 Great North Road, Grey Lynn, Auckland 1021</p>
           </ContactInfo>
-        </Section>
-
-        <Section>
-          <h3>Newsletter</h3>
-          <Newsletter>
-            <p>Subscribe to get the latest updates & news.</p>
-            <form>
-              <input type="email" placeholder="Your email address" />
-              <button type="submit">
-                <IoIosSend />
-              </button>
-            </form>
-          </Newsletter>
         </Section>
       </FooterWrapper>
       <Copyright>

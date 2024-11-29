@@ -1,5 +1,15 @@
 import styled from "styled-components";
 
+export const Container = styled.section`
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  @media (min-width: 1200px) {
+    padding: 2rem 10rem;
+  }
+`;
 export const SubTitle = styled.p`
   font-size: 1rem;
   color: var(--blue);
@@ -46,7 +56,7 @@ export const ContainedButton = styled.button`
   }
 `;
 
-export const Form = styled.form`
+export const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
@@ -56,20 +66,27 @@ export const Form = styled.form`
   }
 `;
 
+export const ColumnForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
 export const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
 
   label {
     font-size: 0.9rem;
-    margin-bottom: 5px;
     color: #4a5568;
+    margin-bottom: 5px;
   }
 
   input,
-  select {
+  select,
+  textarea {
     padding: 10px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     border: 1px solid #e2e8f0;
     border-radius: 5px;
     outline: none;
@@ -77,6 +94,11 @@ export const InputGroup = styled.div`
     &:focus {
       border-color: #22c55e;
     }
+  }
+
+  textarea {
+    resize: none;
+    height: 100px;
   }
 `;
 
@@ -109,4 +131,3 @@ export const Breadcrumbs = styled.nav`
     color: #a0aec0;
   }
 `;
-export const Container = styled.section``;

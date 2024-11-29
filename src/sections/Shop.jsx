@@ -22,8 +22,8 @@ const slideInFromLeft = keyframes`
 // Wrapper for the entire section
 const ShopWrapper = styled.section`
   padding: 4rem;
-  padding-bottom: 6rem;
-  @media (max-width: 375px) {
+  padding-bottom: 5rem;
+  @media (max-width: 1200px) {
     padding: 2rem;
   }
 `;
@@ -49,7 +49,7 @@ const CourseCard = styled.div`
     transform: translateY(-5px);
     transition: transform 0.3s ease;
   }
-  @media (max-width: 375px) {
+  @media (max-width: 700px) {
     width: 350px;
   }
   // Apply delay based on the card index
@@ -65,7 +65,7 @@ const ImageWrapper = styled.div`
   img {
     width: 100%;
     height: 250px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 12px 12px 20px 20px;
   }
 `;
@@ -88,6 +88,13 @@ const HeadingWrapper = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    .btn {
+      display: none;
+    }
+  }
 `;
 const Shop = () => {
   return (
@@ -97,7 +104,9 @@ const Shop = () => {
           <SubTitle>Golf Equipments</SubTitle>
           <Heading>Featured products</Heading>
         </div>
-        <ContainedButton>View more</ContainedButton>
+        <div className="btn">
+          <ContainedButton>View more</ContainedButton>
+        </div>
       </HeadingWrapper>
 
       <CardsWrapper>

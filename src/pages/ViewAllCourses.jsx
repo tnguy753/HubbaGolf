@@ -22,7 +22,7 @@ const Heading = styled.h1`
 export const CoursesList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
   max-width: 1200px;
 `;
@@ -35,6 +35,8 @@ export const CoursesCard = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  text-align: left;
+  width: 350px;
 
   img {
     width: 100%;

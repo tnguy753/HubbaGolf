@@ -172,6 +172,7 @@ const GolfCoursePage = () => {
   const { city, id } = useParams();
   const navigate = useNavigate();
   const [showFullDescription, setShowFullDescription] = useState(false);
+  window.scrollTo(0, 0);
 
   // Get the courseDetail detail based on the `id`
   const courseDetail = getDetailCourse(courses, id);

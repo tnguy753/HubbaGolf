@@ -18,9 +18,9 @@ const slideInFromLeft = keyframes`
 // Wrapper for the entire section
 const FacilitiesWrapper = styled.section`
   padding: 4rem;
-  padding-bottom: 6rem;
+  padding-bottom: 5rem;
   text-align: center;
-  @media (max-width: 375px) {
+  @media (min-width: 375px) {
     padding: 2rem;
   }
 `;

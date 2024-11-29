@@ -18,16 +18,7 @@
         },
         {
           "title": "Indonesia",
-          "items": [
-            { "name": "Bali", "link": "/courses" },
-            { "name": "Bandung", "link": "/courses" },
-            { "name": "Batam", "link": "/courses" },
-            { "name": "Bintan", "link": "/courses" },
-            { "name": "Bogor", "link": "/courses" },
-            { "name": "Jakarta", "link": "/courses" },
-            { "name": "Lombok", "link": "/courses" },
-            { "name": "Surabaya", "link": "/courses" }
-          ]
+          "items": [{ "name": "Batam", "link": "/courses" }]
         },
         {
           "title": "Malaysia",
@@ -50,9 +41,9 @@
         {
           "title": "Outdoors",
           "items": [
-            { "name": "Dalat", "link": "/courses" },
-            { "name": "Danang", "link": "/courses" },
-            { "name": "Halong Bay", "link": "/courses" }
+            { "name": "Singapore", "link": "/courses" },
+            { "name": "Malaysia", "link": "/courses" },
+            { "name": "Indonesia", "link": "/courses" }
           ]
         },
         {
@@ -71,6 +62,11 @@
       "link": "#"
     },
     {
+      "title": "Book",
+      "link": "/#form"
+    },
+
+    {
       "title": "Contact",
       "link": "/contact"
     },
@@ -81,8 +77,8 @@
   ],
   "buttons": [
     {
-      "text": "BOOK A TEE TIME",
-      "link": "/#form"
+      "text": "MANAGE MY BOOKING",
+      "link": "/manage-my-booking"
     }
   ]
 }
