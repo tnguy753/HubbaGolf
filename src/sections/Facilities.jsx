@@ -17,9 +17,10 @@ const slideInFromLeft = keyframes`
 
 // Wrapper for the entire section
 const FacilitiesWrapper = styled.section`
-  padding: 4rem;
+  // padding: 4rem;
   padding-bottom: 5rem;
   text-align: center;
+
   @media (min-width: 375px) {
     padding: 2rem;
   }
@@ -29,14 +30,22 @@ const CardsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2rem;
+  gap: 1rem;
+
+  @media (max-width: 1024px) {
+    max-width: 1024px; /* Ensure it centers within the smaller viewport */
+    justify-content: center; /* Ensure content stays centered */
+  }
 `;
 
-const Card = styled.div`
+const Card = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "delay",
+})`
   margin-bottom: 2rem;
   background: white;
   border-radius: 150px 150px 50px 20px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  width: 100%; // Default width for smaller screens
   max-width: 300px;
   padding: 0rem 1rem;
   padding-bottom: 1rem;
@@ -51,11 +60,28 @@ const Card = styled.div`
 
   // Apply delay based on the card index
   animation-delay: ${({ delay }) => delay}s;
+
+  // Adjust width for screens between 1028px and 1039px
+  @media (min-width: 1024px) and (max-width: 1039px) {
+    max-width: 380px; /* Shrink card size */
+  }
+
+  // Adjust width for screens between 1039px and 1359px
+  @media (min-width: 1040px) and (max-width: 1359px) {
+    max-width: 220px; /* Shrink card size */
+    padding: 0.8rem; /* Compact styling */
+  }
+
+  // Adjust for slightly larger screens (above 1359px)
+  @media (min-width: 1360px) {
+    max-width: 300px; /* Default max-width */
+    padding: 1rem; /* Default padding */
+  }
 `;
 
 const ImageWrapper = styled.div`
-  width: 260px;
-  height: 260px;
+  width: 160px;
+  height: 160px;
   margin: 0 auto;
   overflow: hidden;
   border-radius: 50%;
@@ -74,12 +100,31 @@ const CardTitle = styled.h3`
   color: var(--blue);
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
+
+  // Adjust width for screens between the smallest laptop size and 1359px
+  @media (max-width: 1359px) and (min-width: 1040px) {
+    font-size: 0.9rem;
+  }
+
+  // Adjust for slightly larger screens (above 1359px)
+  @media (min-width: 1360px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const CardText = styled.p`
   font-size: 0.9rem;
   color: #6b6b6b;
   margin-bottom: 1.5rem;
+  // Adjust width for screens between the smallest laptop size and 1359px
+  @media (max-width: 1359px) and (min-width: 1040px) {
+    font-size: 0.7rem;
+  }
+
+  // Adjust for slightly larger screens (above 1359px)
+  @media (min-width: 1360px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const ArrowButton = styled.button`
@@ -118,7 +163,9 @@ const Facilities = () => {
             </ImageWrapper>
             <CardTitle>{facility.title}</CardTitle>
             <CardText>{facility.description}</CardText>
-            <ArrowButton>→</ArrowButton>
+            <a href="/courses/singapore">
+              <ArrowButton>→</ArrowButton>
+            </a>
           </Card>
         ))}
       </CardsWrapper>

@@ -13,7 +13,7 @@ import PaymentResponse from "./pages/PaymentResponse";
 
 const App = () => {
   return (
-    <Router future={{ v7_startTransition: true }}>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<Home />} />
@@ -21,13 +21,20 @@ const App = () => {
         <Route path="/payment/:orderId" element={<PaymentResponse />} />
 
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/contract" element={<ContactPage />} />
 
-        <Route path="/courses/:city/:id" element={<GolfCoursePage />} />
+        <Route
+          path="/courses/:province/:courseID"
+          element={<GolfCoursePage />}
+        />
 
-        <Route path="/courses/:city/:id/booking" element={<BookingForm />} />
+        <Route
+          path="/courses/:province/:courseID/booking"
+          element={<BookingForm />}
+        />
 
         {/* Courses Page */}
-        <Route path="/courses/:city" element={<ViewAllCourses />} />
+        <Route path="/courses/:province" element={<ViewAllCourses />} />
 
         <Route path="/manage-my-booking" element={<Tracking />} />
         <Route path="/manage-my-booking/:orderId" element={<OrderDetails />} />

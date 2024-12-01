@@ -37,11 +37,13 @@ const CardsWrapper = styled.div`
   padding-bottom: 3rem;
 `;
 
-const CourseCard = styled.div`
+const CourseCard = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "delay",
+})`
   background: white;
   border-radius: 20px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-  width: 250px;
+  width: 350px; /* Default width for smaller screens */
 
   animation: ${slideInFromLeft} 0.8s ease-out;
 
@@ -49,9 +51,12 @@ const CourseCard = styled.div`
     transform: translateY(-5px);
     transition: transform 0.3s ease;
   }
-  @media (max-width: 700px) {
-    width: 350px;
+
+  // Set desktop width to 250px for larger screens
+  @media (min-width: 1170px) {
+    width: 250px; /* Fixed width for desktop */
   }
+
   // Apply delay based on the card index
   animation-delay: ${({ delay }) => delay}s;
 `;

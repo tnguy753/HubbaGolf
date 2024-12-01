@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
 import images from "../assets/images";
 import headerData from "../assets/header.json";
+import { fetchMenuData } from "../hook/use-hook";
 
 const HeaderWrapper = styled.header`
   position: sticky;
@@ -10,20 +11,20 @@ const HeaderWrapper = styled.header`
   z-index: 1000;
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem 4rem;
+  padding: 0.5rem 4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.3s ease;
 
-  @media (max-width: 930px) {
-    padding: 1rem 2rem;
+  @media (max-width: 1059px) {
+    padding: 0.5rem 2rem;
   }
 `;
 
 const Logo = styled.a`
   img {
-    height: 50px;
+    height: 65px;
   }
 `;
 
@@ -32,17 +33,19 @@ const HamburgerMenu = styled.div`
   font-size: 1.5rem;
   cursor: pointer;
 
-  @media (max-width: 930px) {
+  @media (max-width: 1059px) {
     display: block;
   }
 `;
 
-const NavBar = styled.nav`
+const NavBar = styled.nav.withConfig({
+  shouldForwardProp: (prop) => prop !== "isOpen",
+})`
   display: flex;
   align-items: center;
   gap: 2rem;
 
-  @media (max-width: 930px) {
+  @media (max-width: 1059px) {
     position: absolute;
     top: 100%;
     left: 0;
@@ -64,7 +67,7 @@ const NavMenu = styled.ul`
   gap: 2rem;
   list-style: none;
 
-  @media (max-width: 930px) {
+  @media (max-width: 1059px) {
     flex-direction: column;
     width: 100%;
     gap: 1rem;
@@ -77,7 +80,9 @@ const NavItemWrapper = styled.div`
   z-index: 1000; /* Keeps it below the mega menu */
 `;
 
-const NavItem = styled.div`
+const NavItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isHovered",
+})`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -101,7 +106,9 @@ const NavItem = styled.div`
   }
 `;
 
-const MegaMenu = styled.div`
+const MegaMenu = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isVisible",
+})`
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
   position: absolute; /* Make it overlay other content */
@@ -175,7 +182,7 @@ const Button = styled.a`
     background: var(--darkblue);
   }
 
-  @media (max-width: 930px) {
+  @media (max-width: 1059px) {
     display: block;
     width: 100%;
     text-align: center;
@@ -185,6 +192,7 @@ const Button = styled.a`
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { menuData } = fetchMenuData();
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -201,7 +209,7 @@ const Header = () => {
       </HamburgerMenu>
       <NavBar isOpen={isMenuOpen}>
         <NavMenu>
-          {headerData.menu.map((menuItem, index) => (
+          {menuData.map((menuItem, index) => (
             <NavItemWrapper
               key={index}
               onMouseEnter={() => handleMouseEnter(index)}
@@ -219,7 +227,7 @@ const Header = () => {
                       <ul>
                         {subMenu.items.map((item, itemIndex) => (
                           <li key={itemIndex}>
-                            <a href={`${item.link}/${item.name}`}>
+                            <a href={`/courses/${item.name.toLowerCase()}`}>
                               {item.name}
                             </a>
                           </li>

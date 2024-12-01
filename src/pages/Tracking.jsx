@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { Breadcrumbs, Container, ColumnForm, InputGroup } from "../components";
 import { Modal } from "../components/Modal";
 import { config } from "../assets/config.js";
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -86,7 +87,6 @@ const Tracking = () => {
     e.preventDefault();
     const formatOrderID = formFields.orderNumber.replace("#", "");
     fetch(
-      // `https://webgolfadmin.azurewebsites.net/Booking/GetEvent?orderNumber=${formatOrderID}&email=${formFields.email}`,
       `${config.get_event}?orderNumber=${formatOrderID}&email=${formFields.email}`,
       {
         method: "GET",

@@ -1,7 +1,7 @@
 import React from "react";
 import { SubTitle, Heading } from "../components/index";
 import styled from "styled-components";
-
+import images from "../assets/images";
 import { PiCheckCircleFill } from "react-icons/pi";
 
 // Wrapper for the entire section
@@ -48,8 +48,7 @@ const ImageWrapper = styled.div`
   border-radius: 16rem 0 0 16rem;
   width: 60%;
   box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
-  background: url("https://images.unsplash.com/photo-1526166997988-ce48e2f004af?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
-    no-repeat center center/cover;
+  background: url(${images.about1}) no-repeat center center/cover;
 `;
 
 const About = () => {

@@ -5,8 +5,8 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { FaPhone } from "react-icons/fa";
 
 const InfoWrapper = styled.section`
-  padding: 1rem;
   background: var(--blue);
+  padding: 1rem;
 
   display: flex;
   align-items: center;
@@ -24,6 +24,14 @@ const InfoItem = styled.a`
 
   p {
     font-size: 0.8rem;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 1rem;
+
+    p {
+      font-size: 0.7rem;
+    }
   }
 `;
 const Info = () => {

@@ -1,31 +1,18 @@
-import React from "react";
-import {
-  SubTitle,
-  Heading,
-  ContainedButton,
-  OutlinedButton,
-} from "../components/index";
-import styled, { keyframes } from "styled-components";
-import { courses } from "../assets/courses";
-import { CoursesCard } from "../pages/ViewAllCourses";
-import { useNavigate } from "react-router-dom";
-import { FaLocationArrow, FaLocationDot } from "react-icons/fa6";
+import React, { useState, useEffect } from "react";
+import { SubTitle, Heading, OutlinedButton } from "../components/index";
+import styled from "styled-components";
 
-// Animation keyframes
-const slideInFromLeft = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
+import { useNavigate } from "react-router-dom";
+import { ListWrapper } from "../components/index";
+import GolfCard from "../components/GolfCard.jsx";
+import { config } from "../assets/config.js";
 
 // Wrapper for the entire section
 const CoursesWrapper = styled.section`
   padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-bottom: 6rem;
   text-align: center;
   background-color: #eef7ff;
@@ -34,16 +21,22 @@ const CoursesWrapper = styled.section`
   }
 `;
 
-const ListWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  padding-bottom: 1rem;
-`;
-
 const Courses = () => {
   const navigate = useNavigate();
+  const [courseList, setCourseList] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = () => {
+      fetch(`${config.get_list_article_by_cat_id}?id=9`, {
+        method: "GET",
+      })
+        .then((res) => res.json()) // Parse the response to JSON
+        .then((data) => setCourseList(data)) // Log the data
+        .catch((err) => console.log(err));
+    };
+
+    fetchCourses();
+  }, []);
 
   return (
     <CoursesWrapper id="courses">
@@ -51,51 +44,19 @@ const Courses = () => {
       <Heading>Let Us Make Your Golf Trip Fantasies Come True</Heading>
 
       <ListWrapper>
-        {courses.slice(0, 3).map((course, index) => (
-          <CoursesCard key={index}>
-            <img src={course.img} alt={course.name} />
-            {course.recommended && (
-              <span className="recommended">RECOMMENDED</span>
-            )}
-
-            <div>
-              <h3>{course.name}</h3>
-              <h4>{course.price}</h4>
-
-              <div className="location">
-                <FaLocationDot />
-                <p>{course.province}</p>
-              </div>
-
-              {course.details && (
-                <p>
-                  {course.details.yards} yards | {course.details.type}
-                </p>
-              )}
-
-              <div className="call-to-action">
-                {course.status === "Permanently Closed" ? (
-                  <span className="status-closed">Permanently Closed</span>
-                ) : (
-                  <button
-                    onClick={() =>
-                      navigate(`/courses/${course.province}/${course.id}`)
-                    }
-                  >
-                    Book
-                  </button>
-                )}
-                <div className="view-map">
-                  <FaLocationArrow />
-                  <a>View on Map</a>
-                </div>
-              </div>
-            </div>
-          </CoursesCard>
+        {courseList.slice(0, 3).map((course, index) => (
+          <GolfCard
+            key={index}
+            img={config.base + course.urlImage}
+            name={course.title}
+            price={"SGD152 (THB4,025)"}
+            province={"Singapore"}
+            id={course.id}
+          />
         ))}
       </ListWrapper>
 
-      <OutlinedButton onClick={() => navigate(`/courses/Singapore`)}>
+      <OutlinedButton onClick={() => navigate(`/courses/singapore`)}>
         View more Courses
       </OutlinedButton>
     </CoursesWrapper>

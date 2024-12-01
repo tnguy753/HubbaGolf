@@ -4,8 +4,9 @@ import LoadingPage from "../pages/LoadingPage";
 import styled from "styled-components";
 import { InputGroup, FormWrapper } from "../components/index";
 import { Modal } from "../components/Modal";
-import { courses } from "../assets/courses";
 import { config } from "../assets/config";
+import images from "../assets/images";
+import { fetchCourseByCountry, fetchLocation } from "../hook/use-hook";
 
 // Styled Components
 const Container = styled.div`
@@ -41,8 +42,7 @@ const BookingCard = styled.div`
 
 const ImageSection = styled.div`
   flex: 1;
-  background: url("https://images.unsplash.com/photo-1597369237991-5c95d1b6e0c8?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
-    no-repeat center/cover;
+  background: url(${images.formImg}) no-repeat center/cover;
 
   @media (max-width: 768px) {
     height: 200px;
@@ -94,9 +94,10 @@ const SubmitButton = styled.button`
     grid-column: span 1;
   }
 `;
+
 const DropdownWrapper = styled.div`
   position: relative;
-  width: 250px;
+  width: 100%;
   font-family: Arial, sans-serif;
 `;
 
@@ -159,32 +160,32 @@ const DropdownList = styled.ul`
   }
 `;
 const FormBooking = () => {
-  const [inputFields, setInputFields] = useState({});
+  const [inputFields, setInputFields] = useState({ PlayerNumber: 1 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("success");
   const [modalMessage, setModalMessage] = useState("");
-  const [countryList, setCountryList] = useState([]);
+  const [courseList, setCourseList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { courseData } = fetchCourseByCountry();
+  const { locationData } = fetchLocation();
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const selectOption = (country) => {
     setSelected(country);
-    setInputFields({ ...inputFields, Country: country.name.common });
+    setInputFields({
+      ...inputFields,
+      Country: country.countryName,
+      Course: "",
+    });
     setIsOpen(false);
   };
 
-  const golfCountries = countryList.filter((country) =>
-    ["indonesia", "singapore", "malaysia"].includes(
-      country.name.common.toLowerCase()
-    )
-  );
-
   const [selected, setSelected] = useState(
-    golfCountries[0] || {
-      name: { common: "Select country" },
-      flags: { png: "" },
+    courseData[0] || {
+      countryName: "Select country",
+      // flags: { png: "" },
     }
   );
 
@@ -206,18 +207,26 @@ const FormBooking = () => {
     setIsModalOpen(true);
   };
 
-  const fetchCountry = () => {
-    fetch(config.get_country, {
-      method: "GET",
-    })
-      .then((res) => res.json()) // Parse the response to JSON
-      .then((data) => setCountryList(data)) // Log the data
-      .catch((err) => console.log(err));
-  };
-
   useEffect(() => {
-    fetchCountry();
-  }, []);
+    const fetchCourses = (id) => {
+      fetch(`${config.get_course_by_country}?id=${id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setCourseList(data);
+          if (data.length > 0) {
+            setInputFields((prev) => ({
+              ...prev,
+              Course: data[0].title,
+            }));
+          }
+        })
+        .catch((err) => console.log(err));
+    };
+
+    fetchCourses(selected.countryId);
+  }, [selected.countryId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -299,31 +308,30 @@ const FormBooking = () => {
               </InputGroup>
 
               <InputGroup>
-                {" "}
                 <label htmlFor="Country">Country</label>
                 <DropdownWrapper>
                   <SelectedOption onClick={toggleDropdown}>
                     <span>
                       {!selected?.flags?.png ? undefined : (
                         <img
-                          src={selected?.flags?.png}
-                          alt={`${selected?.name?.common} flag`}
+                          src={
+                            selected?.countryName == golfCountries.name.common
+                              ? golfCountries.flags?.png
+                              : ""
+                          }
+                          alt={`${selected?.countryName} flag`}
                         />
                       )}
 
-                      {selected?.name?.common}
+                      {selected?.countryName}
                     </span>
                     <span>&#9662;</span> {/* Down arrow */}
                   </SelectedOption>
                   {isOpen && (
                     <DropdownList>
-                      {golfCountries.map((country, index) => (
+                      {locationData.map((country, index) => (
                         <li key={index} onClick={() => selectOption(country)}>
-                          <img
-                            src={country.flags.png}
-                            alt={`${country.name.common} flag`}
-                          />
-                          {country.name.common}
+                          {country.countryName}
                         </li>
                       ))}
                     </DropdownList>
@@ -334,8 +342,8 @@ const FormBooking = () => {
               <InputGroup>
                 <label htmlFor="Course">Golf Courses </label>
                 <select id="Course" onChange={handleChange} defaultValue={"1"}>
-                  {courses.map((course, index) => (
-                    <option key={index}>{course.name}</option>
+                  {courseList.map((course, index) => (
+                    <option key={index}>{course.title}</option>
                   ))}
                 </select>
               </InputGroup>

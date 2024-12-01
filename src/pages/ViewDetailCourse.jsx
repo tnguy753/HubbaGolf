@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import parse from "html-react-parser";
+import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import styled from "styled-components";
 import BookingSection from "../components/BookingSection";
-import { courses } from "../assets/courses.js";
-import { CoursesCard, CoursesList } from "./ViewAllCourses.jsx";
-import { FaLocationArrow, FaLocationDot } from "react-icons/fa6";
-import { getDetailCourse } from "../helpers.js";
+import { ListWrapper } from "../components/index.jsx";
 import { Breadcrumbs } from "../components/index.jsx";
+import { config } from "../assets/config.js";
+import { capitalizeFirstLetter, getProvinceID } from "../helpers.js";
+import { fetchLocation } from "../hook/use-hook";
+import GolfCard from "../components/GolfCard.jsx";
 
 const PageWrapper = styled.section`
   padding: 2rem;
@@ -169,15 +171,41 @@ const RightColumn = styled.div`
 `;
 
 const GolfCoursePage = () => {
-  const { city, id } = useParams();
-  const navigate = useNavigate();
+  const { province, courseID } = useParams();
+  const [courseData, setCourseData] = useState([]);
   const [showFullDescription, setShowFullDescription] = useState(false);
-  window.scrollTo(0, 0);
+  const [courseList, setCourseList] = useState([]);
+  const { locationData } = fetchLocation();
 
-  // Get the courseDetail detail based on the `id`
-  const courseDetail = getDetailCourse(courses, id);
+  const provinceID = getProvinceID(locationData, province);
 
-  if (!courseDetail) {
+  useEffect(() => {
+    const fetchCourses = () => {
+      fetch(`${config.get_list_article_by_cat_id}?id=${provinceID}`, {
+        method: "GET",
+      })
+        .then((res) => res.json()) // Parse the response to JSON
+        .then((data) => setCourseList(data)) // Log the data
+        .catch((err) => console.log(err));
+    };
+
+    fetchCourses();
+  }, [courseID, provinceID]);
+
+  useEffect(() => {
+    const fetchCourses = () => {
+      fetch(`${config.get_article}${courseID}`, {
+        method: "GET",
+      })
+        .then((res) => res.json()) // Parse the response to JSON
+        .then((data) => setCourseData(data)) // Log the data
+        .catch((err) => console.log(err));
+    };
+
+    fetchCourses();
+  }, [courseID]);
+
+  if (!courseData) {
     return <p>Course not found</p>; // Handle cases where the courseDetail doesn't exist
   }
 
@@ -191,25 +219,30 @@ const GolfCoursePage = () => {
         <Breadcrumbs>
           <a href="/">Home</a>
           <span>&gt;</span>
-          <a href={`/courses/${city}`}>{city}</a>
+          <a href={`/courses/${province}`}>{capitalizeFirstLetter(province)}</a>
           <span>&gt;</span>
-          <span>{courseDetail.name}</span>
+          <span>{courseData.title}</span>
         </Breadcrumbs>
 
         {/* Main Content */}
         <Layout>
           {/* Left Column */}
           <LeftColumn>
-            <img src={courseDetail.img} alt={courseDetail.name} />
+            <img
+              src={config.base + courseData.urlImage}
+              alt={courseData.title}
+            />
 
+            {/* {courseData && parse(courseData?.content)} */}
             <div className="description-wrapper">
               <div
                 className={`description ${
                   showFullDescription ? "expanded" : ""
                 }`}
               >
-                {courseDetail.description}
+                {courseData.summary}
               </div>
+
               <span className="read-more" onClick={toggleDescription}>
                 {showFullDescription ? "Read Less" : "Read More"}
               </span>
@@ -220,60 +253,28 @@ const GolfCoursePage = () => {
           <RightColumn>
             {/* Booking Section */}
             <BookingSection
-              price={courseDetail.price}
-              city={courseDetail.province}
-              id={courseDetail.id}
+              price={courseData.price}
+              city={province}
+              id={courseData.id}
             />
           </RightColumn>
         </Layout>
         {/* Related Courses */}
         <div className="related-courses">
           <h2>Related Golf Courses</h2>
-          <CoursesList>
-            {courses.map((course, index) => (
-              <CoursesCard key={index}>
-                <img src={course.img} alt={course.name} />
-                {course.recommended && (
-                  <span className="recommended">RECOMMENDED</span>
-                )}
-
-                <div>
-                  <h3>{course.name}</h3>
-                  <h4>{course.price}</h4>
-
-                  <div className="location">
-                    <FaLocationDot />
-                    <p>{course.province}</p>
-                  </div>
-
-                  {course.details && (
-                    <p>
-                      {course.details.yards} yards | {course.details.type}
-                    </p>
-                  )}
-
-                  <div className="call-to-action">
-                    {course.status === "Permanently Closed" ? (
-                      <span className="status-closed">Permanently Closed</span>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          navigate(`/courses/${course.province}/${course.id}`);
-                          window.scrollTo({ top: 0 });
-                        }}
-                      >
-                        Book
-                      </button>
-                    )}
-                    <div className="view-map">
-                      <FaLocationArrow />
-                      <a>View on Map</a>
-                    </div>
-                  </div>
-                </div>
-              </CoursesCard>
+          <ListWrapper>
+            {courseList.map((course, index) => (
+              <GolfCard
+                key={index}
+                img={config.base + course.urlImage}
+                name={course.title}
+                price={"SGD152 (THB4,025)"}
+                province={province}
+                id={course.id}
+                reload
+              />
             ))}
-          </CoursesList>
+          </ListWrapper>
         </div>
       </PageWrapper>
     </>

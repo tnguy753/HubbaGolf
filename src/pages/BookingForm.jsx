@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import { Breadcrumbs, Container } from "../components/index";
 import images from "../assets/images";
-import { courses } from "../assets/courses.js";
-import { getDetailCourse } from "../helpers.js";
 import { FaInfoCircle } from "react-icons/fa";
+import { capitalizeFirstLetter } from "../helpers.js";
 import { InputGroup, FormWrapper } from "../components/index";
 import LoadingPage from "./LoadingPage.jsx";
 import { config } from "../assets/config.js";
+
 const BookingGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 0.8fr;
@@ -234,19 +234,43 @@ const RateIncludes = styled.div`
 `;
 
 const BookingForm = () => {
-  const { city, id } = useParams();
+  const { province, courseID } = useParams();
   const [loading, setLoading] = useState(false);
+  const [courseData, setCourseData] = useState([]);
   const navigate = useNavigate();
-  // Get the courseDetail detail based on the `id`
-  const courseDetail = getDetailCourse(courses, id);
+
   const handleChange = (e) => {
     setInputFields({ ...inputFields, [e.target.id]: e.target.value });
   };
   const [inputFields, setInputFields] = useState({
-    Country: city,
-    Course: courseDetail.name,
+    Country: capitalizeFirstLetter(province),
+    Course: "",
     PlayerNumber: 1,
   });
+
+  useEffect(() => {
+    const fetchCourses = () => {
+      fetch(
+        `https://webgolfadmin.azurewebsites.net/Website/GetArticleById/${courseID}`,
+        {
+          method: "GET",
+        }
+      )
+        .then((res) => res.json()) // Parse the response to JSON
+        .then(
+          (data) => (
+            setCourseData(data),
+            setInputFields((prev) => ({
+              ...prev,
+              Course: data.title,
+            }))
+          )
+        ) // Log the data
+        .catch((err) => console.log(err));
+    };
+
+    fetchCourses();
+  }, [courseID]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -277,9 +301,9 @@ const BookingForm = () => {
           {" "}
           <a href="/">Home</a>
           <span>&gt;</span>
-          <a href={`/courses/${city}`}>{city}</a>
+          <a href={`/courses/${province}`}>{capitalizeFirstLetter(province)}</a>
           <span>&gt;</span>
-          <a href={`/courses/${city}/${id}`}>{courseDetail.name}</a>
+          <a href={`/courses/${province}/${courseID}`}>{courseData.title}</a>
           <span>&gt;</span>
           <span>Booking</span>
         </Breadcrumbs>
@@ -383,7 +407,7 @@ const BookingForm = () => {
                   You agree with the golfscape <a href="#">Terms of Use</a> by
                   completing this booking.
                 </p>
-                <button type="submit">Book Now for {courseDetail.price}</button>
+                <button type="submit">Book Now for SGD152 (THB4,025)</button>
                 <small>You will receive an instant confirmation</small>
               </ReservationInfo>
             </LeftColumn>
@@ -396,8 +420,8 @@ const BookingForm = () => {
                 src={images.facility1} // Replace with actual image
                 alt="Golf Course"
               />
-              <h3>{courseDetail.name}</h3>
-              <p>{courseDetail.province}</p>
+              <h3>{courseData.title}</h3>
+              <p>{courseData.province}</p>
               <BookingDetails>
                 <div>
                   <span>Date:</span>{" "}
@@ -411,7 +435,7 @@ const BookingForm = () => {
                   <span>Player:</span> {inputFields.PlayerNumber}
                 </div>
                 <div>
-                  <span>Total:</span> {courseDetail.price}
+                  <span>Total:</span> SGD152 (THB4,025)
                 </div>
                 <div>
                   <small>Includes VAT (5%): SGD9 (THB13,21)</small>

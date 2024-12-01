@@ -90,6 +90,7 @@ export const InputGroup = styled.div`
     border: 1px solid #e2e8f0;
     border-radius: 5px;
     outline: none;
+    width: 100%;
 
     &:focus {
       border-color: #22c55e;
@@ -130,4 +131,15 @@ export const Breadcrumbs = styled.nav`
     margin: 0 0.5rem;
     color: #a0aec0;
   }
+`;
+
+export const ListWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  gap: 1rem;
+  width: 100%;
+  max-width: 1359px;
+  margin-bottom: 2rem;
 `;

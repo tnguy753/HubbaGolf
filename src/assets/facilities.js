@@ -4,7 +4,7 @@ export const facilities = [
     title: "Global Golf Game Booking",
     description:
       "Effortlessly book tee times at premier golf courses around the world. Hubbagolf provides real-time availability and competitive rates, ensuring a smooth and reliable reservation process.",
-    img: images.facility4,
+    img: images.facility5,
   },
   {
     title: "Golf Simulator Booking",
@@ -16,7 +16,7 @@ export const facilities = [
     title: "Golf Travel Packages",
     description:
       "Discover and book customized golf travel experiences. From luxurious golf resorts to exclusive international tours, Hubbagolf curates packages that cater to various preferences and budgets.",
-    img: images.facility5,
+    img: images.facility4,
   },
   {
     title: "Golf Equipment Shopping",
