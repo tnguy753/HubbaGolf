@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import images from "../assets/images";
 import { FaFacebookF, FaSkype, FaWhatsapp } from "react-icons/fa";
 
 // Styled Components
@@ -7,6 +8,10 @@ const FooterContainer = styled.footer`
   background-color: var(--blue);
   color: #ffffff;
   padding: 2rem 4rem;
+  margin-top: 1rem;
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const FooterWrapper = styled.div`
@@ -29,16 +34,22 @@ const Section = styled.div`
   min-width: 250px;
 
   h3 {
-    font-size: 18px;
+    font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 15px;
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 
   p {
-    font-size: 14px;
+    font-size: 0.8rem;
     line-height: 1.6;
     margin-bottom: 15px;
-    text-align: justify;
+
+    @media (max-width: 768px) {
+      text-align: center;
+    }
   }
 `;
 
@@ -53,7 +64,7 @@ const Links = styled.ul`
     a {
       text-decoration: none;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 0.8rem;
 
       &:hover {
         color: #cccccc;
@@ -63,7 +74,7 @@ const Links = styled.ul`
 `;
 
 const ContactInfo = styled.div`
-  font-size: 14px;
+  font-size: 0.8rem;
   line-height: 1.6;
 
   a {
@@ -78,6 +89,10 @@ const ContactInfo = styled.div`
 const SocialLinks = styled.div`
   display: flex;
   gap: 1rem;
+  align-items: center;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 
   a {
     padding: 0.4rem;
@@ -102,7 +117,7 @@ const SocialLinks = styled.div`
 const Copyright = styled.div`
   text-align: center;
   margin-top: 30px;
-  font-size: 14px;
+  font-size: 0.8rem;
   color: #cccccc;
 
   a {
@@ -120,6 +135,9 @@ const Footer = () => {
   return (
     <FooterContainer>
       <FooterWrapper>
+        <Section>
+          <img src={images.logo} height={90} />
+        </Section>
         <Section>
           <h3>HubbaGolf</h3>
           <p>

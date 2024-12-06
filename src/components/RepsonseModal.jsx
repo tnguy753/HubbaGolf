@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -23,7 +24,7 @@ const ModalContent = styled.div`
 `;
 
 const Message = styled.p`
-  font-size: 16px;
+  font-size: 1rem;
   color: ${({ type }) => (type === "success" ? "green" : "red")};
   margin-bottom: 20px;
 `;

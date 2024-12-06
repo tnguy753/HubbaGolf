@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from "react";
 import parse from "html-react-parser";
-import { useParams } from "react-router-dom";
-import Header from "../components/Header";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+
+import Info from "../components/Info.jsx";
+import Header from "../components/Header";
+
+import { ActionButton } from "./ViewAllCourses.jsx";
+import CourseReview from "../components/Review.jsx";
 import BookingSection from "../components/BookingSection";
-import { ListWrapper } from "../components/index.jsx";
-import { Breadcrumbs } from "../components/index.jsx";
+import { Breadcrumbs, CardList } from "../components/index.jsx";
 import { config } from "../assets/config.js";
-import { capitalizeFirstLetter, getProvinceID } from "../helpers.js";
-import { fetchLocation } from "../hook/use-hook";
+import { capitalizeFirstLetter, getCurrency } from "../helpers.js";
+import { fetchArticle, fetchArticlesList } from "../hook/use-hook";
 import GolfCard from "../components/GolfCard.jsx";
+import Footer from "../components/Footer.jsx";
+import LoadingPage from "./LoadingPage.jsx";
+import ItinerarySection from "../components/ItinerarySection.jsx";
 
 const PageWrapper = styled.section`
   padding: 2rem;
@@ -78,33 +85,42 @@ const Layout = styled.div`
   }
 `;
 
+const ImageWrapper = styled.img`
+  width: 100%;
+  border-radius: 8px;
+  object-fit: ${({ shop }) => (shop ? "contain" : "cover")};
+  height: 250px;
+
+  @media (min-width: 768px) {
+    height: 350px;
+  }
+`;
+
 const LeftColumn = styled.div`
   flex: 2;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 
-  img {
-    width: 100%;
-    border-radius: 8px;
-    object-fit: cover;
-    height: 300px;
+  .course-review-title {
+    color: var(--blue);
 
-    @media (min-width: 768px) {
-      height: 400px;
+    @media (max-width: 768px) {
+      font-size: 1.2rem;
     }
   }
 
   .description-wrapper {
     position: relative;
     width: 100%;
-
     text-align: justify;
+    padding-bottom: 1rem;
+    border-bottom: 1px #dfdfdf solid;
   }
 
   .description {
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limit to 3 rows */
+    -webkit-line-clamp: 8; /* Limit to 10 rows */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -172,111 +188,134 @@ const RightColumn = styled.div`
 
 const GolfCoursePage = () => {
   const { province, courseID } = useParams();
-  const [courseData, setCourseData] = useState([]);
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [courseList, setCourseList] = useState([]);
-  const { locationData } = fetchLocation();
-
-  const provinceID = getProvinceID(locationData, province);
-
+  const { articleContent } = fetchArticle(courseID);
+  const [typeID, setTypeID] = useState(null);
+  const { articles, isLoading } = fetchArticlesList(typeID);
+  const facilityID = articleContent.type;
+  const currency = getCurrency();
   useEffect(() => {
-    const fetchCourses = () => {
-      fetch(`${config.get_list_article_by_cat_id}?id=${provinceID}`, {
-        method: "GET",
-      })
-        .then((res) => res.json()) // Parse the response to JSON
-        .then((data) => setCourseList(data)) // Log the data
-        .catch((err) => console.log(err));
-    };
+    if (articleContent?.categoryId) {
+      setTypeID(articleContent.categoryId);
+    }
+  }, [articleContent]);
 
-    fetchCourses();
-  }, [courseID, provinceID]);
+  const typeName =
+    facilityID == 27
+      ? "Travel Packages"
+      : facilityID == 28
+      ? "Golf Equipment"
+      : "Golf Courses"; // Default type
 
-  useEffect(() => {
-    const fetchCourses = () => {
-      fetch(`${config.get_article}${courseID}`, {
-        method: "GET",
-      })
-        .then((res) => res.json()) // Parse the response to JSON
-        .then((data) => setCourseData(data)) // Log the data
-        .catch((err) => console.log(err));
-    };
-
-    fetchCourses();
-  }, [courseID]);
-
-  if (!courseData) {
-    return <p>Course not found</p>; // Handle cases where the courseDetail doesn't exist
+  if (isLoading) {
+    return <LoadingPage />;
   }
 
+  if (!articleContent) {
+    return <p>Course not found</p>; // Handle cases where the courseDetail doesn't exist
+  }
+  // console.log(articleContent);
   const toggleDescription = () => setShowFullDescription((prev) => !prev);
 
   return (
     <>
+      <Info />
       <Header />
       <PageWrapper>
         {/* Breadcrumbs */}
         <Breadcrumbs>
           <a href="/">Home</a>
           <span>&gt;</span>
-          <a href={`/courses/${province}`}>{capitalizeFirstLetter(province)}</a>
+          <a href={`/${province}`}>{capitalizeFirstLetter(province)}</a>
           <span>&gt;</span>
-          <span>{courseData.title}</span>
+          <span>{articleContent.title}</span>
         </Breadcrumbs>
 
         {/* Main Content */}
         <Layout>
           {/* Left Column */}
           <LeftColumn>
-            <img
-              src={config.base + courseData.urlImage}
-              alt={courseData.title}
+            <ImageWrapper
+              shop={articleContent.type == 28 ? "shop" : undefined}
+              src={config.base + articleContent.urlImage}
+              alt={articleContent.title}
             />
 
-            {/* {courseData && parse(courseData?.content)} */}
+            {/* {articleContent && parse(articleContent?.content)} */}
             <div className="description-wrapper">
               <div
                 className={`description ${
                   showFullDescription ? "expanded" : ""
                 }`}
               >
-                {courseData.summary}
+                {/* {JSON.stringify(articleContent.content)} */}
+                {parse(articleContent.content || "")}
+                {/* {articleContent.summary} */}
               </div>
-
-              <span className="read-more" onClick={toggleDescription}>
-                {showFullDescription ? "Read Less" : "Read More"}
-              </span>
+              <br />
+              <ActionButton
+                onClick={toggleDescription}
+                style={{
+                  background: "white",
+                  border: "2px #008080 solid",
+                  color: "#008080",
+                }}
+              >
+                {showFullDescription ? "Read Less " : "Read More +"}
+              </ActionButton>
             </div>
+            <h2 className="course-review-title">
+              {articleContent.title} - Course Reviews
+            </h2>
+            <CourseReview name={`${articleContent.title}- "Course Reviews"`} />
           </LeftColumn>
 
           {/* Right Column */}
           <RightColumn>
-            {/* Booking Section */}
-            <BookingSection
-              price={courseData.price}
-              city={province}
-              id={courseData.id}
-            />
+            {facilityID == 27 ? (
+              <ItinerarySection />
+            ) : (
+              <BookingSection
+                price={currency + "120"}
+                // price={articleContent.price}
+                city={province}
+                id={articleContent.id}
+                name={articleContent.title}
+              />
+            )}
           </RightColumn>
         </Layout>
         {/* Related Courses */}
         <div className="related-courses">
-          <h2>Related Golf Courses</h2>
-          <ListWrapper>
-            {courseList.map((course, index) => (
-              <GolfCard
-                key={index}
-                img={config.base + course.urlImage}
-                name={course.title}
-                price={"SGD152 (THB4,025)"}
-                province={province}
-                id={course.id}
-                reload
-              />
-            ))}
-          </ListWrapper>
+          <h2>Related {typeName}</h2>
+          <CardList>
+            {articles
+              ?.filter((i) => i.type == articleContent.type && i.id != courseID)
+              .map((item, index) => (
+                <GolfCard
+                  reload
+                  key={index}
+                  img={`${config.base}${item.urlImage}`} // Build image URL
+                  name={item.title}
+                  price={currency + "120"}
+                  province={
+                    facilityID == 27 || facilityID == 28 ? "" : province
+                  }
+                  id={item.id}
+                  isShop={facilityID == 28 ? "true" : undefined}
+                  details={
+                    facilityID == 27
+                      ? "2 Nights / 3 Rounds"
+                      : facilityID == 28
+                      ? ""
+                      : "7194 yards | Parkland"
+                  }
+                />
+              ))}
+          </CardList>
         </div>
       </PageWrapper>
+      <Footer />
     </>
   );
 };

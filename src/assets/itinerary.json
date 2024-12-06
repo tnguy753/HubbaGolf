@@ -1,0 +1,24 @@
+{
+  "itinerary": [
+    {
+      "title": "Day 1 - Arrival in Singapore",
+      "subtitle": "Arrival at Singapore airport and take a taxi to your hotel."
+    },
+    {
+      "title": "Day 2 - Singapore: Golf at Marina Bay Golf Club",
+      "subtitle": "Golf at Marina Bay Golf Club - a challenging and interesting golf course not far from the city."
+    },
+    {
+      "title": "Day 3 - Singapore: Golf at Warren Golf Club",
+      "subtitle": "Golf at Warren Golf Club – a very enjoyable and at times testing layout adjacent to one of the tributaries of the Kranji Reservoir."
+    },
+    {
+      "title": "Day 4 - Bintan: Golf at Ria Bintan",
+      "subtitle": "Take the ferry to Bintan and transfer to Ria Bintan - a truly stunning course which will delight the golfing connoisseur."
+    },
+    {
+      "title": "Day 5 - Bintan: Golf at Laguna Golf Bintan. Departure",
+      "subtitle": "Play golf today at Laguna Golf Bintan - a recently renovated Greg Norman creation. After your round take the ferry back to Singapore. Take a taxi to Singapore Changi Airport for departure."
+    }
+  ]
+}

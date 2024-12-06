@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaLocationArrow, FaLocationDot } from "react-icons/fa6";
 import { capitalizeFirstLetter } from "../helpers.js";
+import { Modal } from "../components/RepsonseModal";
 
-const CoursesCard = styled.div`
+const CoursesCard = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "shop",
+})`
   background: white;
   border-radius: 10px;
   overflow: hidden;
@@ -13,13 +16,6 @@ const CoursesCard = styled.div`
   flex-direction: column;
   position: relative;
   text-align: left;
-  width: 350px;
-
-  img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
 
   .recommended {
     position: absolute;
@@ -35,7 +31,7 @@ const CoursesCard = styled.div`
     z-index: 2;
   }
 
-  div {
+  .content {
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -44,7 +40,7 @@ const CoursesCard = styled.div`
 
   h3 {
     font-size: 1.2rem;
-    // height: 55px;
+    height: 55px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -61,10 +57,8 @@ const CoursesCard = styled.div`
 
   .location {
     display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 0.2rem;
-    padding: 0;
     font-size: 0.9rem;
     color: var(--secondary);
 
@@ -75,10 +69,9 @@ const CoursesCard = styled.div`
 
   .call-to-action {
     display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: space-between;
-    padding: 0;
+    align-items: center;
+    gap: 1rem;
 
     button {
       padding: 0.5rem 2rem;
@@ -102,7 +95,6 @@ const CoursesCard = styled.div`
 
     .view-map {
       display: flex;
-      flex-direction: row;
       align-items: center;
       gap: 0.2rem;
       color: var(--blue);
@@ -119,7 +111,11 @@ const CoursesCard = styled.div`
     }
   }
 `;
-
+const ImageWrapper = styled.img`
+  width: 100%;
+  height: 180px;
+  object-fit: ${({ shop }) => (shop ? "contain" : "cover")};
+`;
 const GolfCard = ({
   img,
   name,
@@ -128,51 +124,57 @@ const GolfCard = ({
   details,
   id,
   recommended,
-  status,
   reload,
+  isShop,
 }) => {
+  const [openModal, setOpenModal] = useState();
   const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    const defaultProvince = "singapore";
+    const resolvedProvince = province || defaultProvince; // Fallback to "singapore" if province is not defined
+    const path = `/courses/${resolvedProvince.toLowerCase()}/${id}`;
+
+    if (reload) {
+      location.reload();
+    }
+
+    navigate(path);
+  };
+  const handleAddToCart = () => {
+    setOpenModal(true);
+  };
   return (
     <CoursesCard>
-      <img src={img} alt={name} />
+      <ImageWrapper src={img} alt={name} shop={isShop} />
       {recommended && <span className="recommended">RECOMMENDED</span>}
 
-      <div>
+      <div className="content">
         <h3>{name}</h3>
         <h4>{price}</h4>
 
-        <div className="location">
-          <FaLocationDot />
-          <p>{capitalizeFirstLetter(province)}</p>
-        </div>
-
-        {details && (
-          <p>
-            {details.yards} yards | {details.type}
-          </p>
+        {province && (
+          <div className="location">
+            <FaLocationDot />
+            <p>{capitalizeFirstLetter(province)}</p>
+          </div>
         )}
+        <p>{details}</p>
 
         <div className="call-to-action">
-          {status === "Permanently Closed" ? (
-            <span className="status-closed">Permanently Closed</span>
+          {isShop ? (
+            <button onClick={handleAddToCart}>Add to Cart</button>
           ) : (
-            <button
-              onClick={() =>
-                navigate(
-                  `/courses/${province.toLowerCase()}/${id}`,
-                  reload && location.reload()
-                )
-              }
-            >
-              Book
-            </button>
+            <button onClick={handleNavigate}>Book</button>
           )}
-          <div className="view-map">
-            <FaLocationArrow />
-            <a>View on Map</a>
-          </div>
         </div>
       </div>
+      <Modal
+        isOpen={openModal}
+        message={"WORK IN PROGRESS"}
+        type={"success"}
+        onClose={() => setOpenModal(false)}
+      />
     </CoursesCard>
   );
 };

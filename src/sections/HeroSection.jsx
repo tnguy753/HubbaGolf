@@ -1,125 +1,127 @@
-import React from "react";
+import React, { useState } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
-import images from "../assets/images";
-// Carousel Wrapper Styles
-const CarouselWrapper = styled.div`
-  position: relative;
-  width: 100%;
+import { LocationModal } from "../components/LocationModal";
+import { fetchBanner } from "../hook/use-hook";
+import { config } from "../assets/config";
 
-  .slick-dots {
-    bottom: 20px;
-    li button:before {
-      color: white;
-      font-size: 10px;
-    }
-    li.slick-active button:before {
-      color: #1a4d2e;
-    }
-  }
+const CarouselWrapper = styled.div`
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 `;
 
-// Hero Banner Styles
-const HeroSlide = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "image",
-})`
-  position: relative;
-  height: 50vh;
-  background: ${({ image }) => `url(${image}) no-repeat center center/cover`};
+const HeroSlide = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   text-align: center;
+  width: 100%;
+  height: 200px;
+  background: ${({ image }) =>
+    image ? `url(${image}) no-repeat center center/cover` : "none"};
+  color: white;
 
-  div {
+  @media (max-width: 1024px) {
+    height: 35vh;
+  }
+
+  .content {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: center; /* This centers content vertically */
-    position: relative;
-    z-index: 2;
-    height: 100%; /* Ensure the content container spans full height */
+    width: 100%;
+    height: 100%;
 
     h1 {
-      font-size: 3rem;
+      font-size: 2rem;
       margin-bottom: 1rem;
       font-weight: bold;
+
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
     }
+
     p {
       font-size: 1.2rem;
       max-width: 600px;
-      margin: 0 auto 2rem;
-    }
-    button {
-      padding: 0.8rem 1.5rem;
-      font-size: 1rem;
-      background: transparent;
-      color: white;
-      border: 2px solid white;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: 0.3s ease;
+      margin: 0 auto;
+      margin-bottom: 2rem;
 
-      &:hover {
-        background: white;
-        color: #1a4d2e;
+      @media (max-width: 768px) {
+        font-size: 0.8rem;
+        max-width: 60%;
       }
     }
   }
 `;
 
-const HeroSection = () => {
-  const slides = [
-    {
-      id: 1,
-      image: images.banner1,
-      title: "Premium Facilities",
-      text: "Relax and unwind with premium facilities after your game.",
-    },
-    {
-      id: 2,
-      image: images.banner2,
-      title: "Beautiful Scenery",
-      text: "Enjoy stunning views while playing your favorite game.",
-    },
-    {
-      id: 3,
-      image: images.banner3,
-      title: "World Class Golf",
-      text: "Book your tee time with ease and get ready to experience the perfect round.",
-    },
-    {
-      id: 4,
-      image: images.banner4,
-      title: "South East Asia",
-      text: "Book your tee time with ease and get ready to experience the perfect round.",
-    },
-  ];
+const Arrow = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+  color: white;
+  font-size: 2rem;
 
-  const settings = {
-    dots: true,
+  &.prev {
+    left: 20px;
+  }
+
+  &.next {
+    right: 20px;
+  }
+
+  &:hover {
+    color: #ccc;
+  }
+`;
+
+const HeroSection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { bannerImg } = fetchBanner();
+
+  const CustomPrevArrow = ({ onClick }) => (
+    <Arrow className="prev" onClick={onClick}>
+      &#10094; {/* Left arrow */}
+    </Arrow>
+  );
+
+  const CustomNextArrow = ({ onClick }) => (
+    <Arrow className="next" onClick={onClick}>
+      &#10095; {/* Right arrow */}
+    </Arrow>
+  );
+
+  const sliderSettings = {
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
-    arrows: false,
+    arrows: true,
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
   };
 
   return (
     <CarouselWrapper>
-      <Slider {...settings}>
-        {slides.map((slide) => (
-          <HeroSlide key={slide.id} image={slide.image}>
-            <div>
+      <LocationModal
+        isOpen={isModalOpen}
+        message="22"
+        type="success"
+        onClose={() => setIsModalOpen(false)}
+      />
+      <Slider {...sliderSettings}>
+        {bannerImg.map((slide) => (
+          <HeroSlide key={slide.id} image={`${config.base}${slide.urlImage}`}>
+            <div className="content">
               <h1>{slide.title}</h1>
-              <p>{slide.text}</p>
-              <a href="#form">
-                {" "}
-                <button>Book Now</button>
-              </a>
+              <p>{slide.description}</p>
             </div>
           </HeroSlide>
         ))}

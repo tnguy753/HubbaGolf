@@ -9,7 +9,8 @@
 }
 
 :root {
-    --blue: rgb(4, 123, 108);
+    /* #047B6C */
+    --blue: #00544A;
     --secondary: #8e56a8;
     --lightblue: #f3eada;
     --darkblue: #01676f;

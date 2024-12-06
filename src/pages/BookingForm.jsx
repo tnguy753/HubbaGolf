@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
 import moment from "moment";
-import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Header from "../components/Header";
-import { Breadcrumbs, Container } from "../components/index";
-import images from "../assets/images";
 import { FaInfoCircle } from "react-icons/fa";
-import { capitalizeFirstLetter } from "../helpers.js";
-import { InputGroup, FormWrapper } from "../components/index";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+import {
+  Breadcrumbs,
+  Container,
+  InputGroup,
+  FormWrapper,
+} from "../components/index";
+import Header from "../components/Header";
 import LoadingPage from "./LoadingPage.jsx";
+
 import { config } from "../assets/config.js";
+import { capitalizeFirstLetter } from "../helpers.js";
+import { fetchArticle } from "../hook/use-hook";
 
 const BookingGrid = styled.div`
   display: grid;
@@ -184,30 +190,6 @@ const BookingDetails = styled.div`
   }
 `;
 
-const PromoCode = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  margin: 1rem 0;
-
-  input,
-  select {
-    flex: 1;
-    padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-
-    @media (max-width: 768px) {
-      padding: 0.6rem;
-      font-size: 0.85rem;
-    }
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column; /* Stack input and dropdown */
-    gap: 0.5rem;
-  }
-`;
-
 const RateIncludes = styled.div`
   h4 {
     font-size: 1.2rem;
@@ -236,7 +218,8 @@ const RateIncludes = styled.div`
 const BookingForm = () => {
   const { province, courseID } = useParams();
   const [loading, setLoading] = useState(false);
-  const [courseData, setCourseData] = useState([]);
+  const { articleContent } = fetchArticle(courseID);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -249,27 +232,12 @@ const BookingForm = () => {
   });
 
   useEffect(() => {
-    const fetchCourses = () => {
-      fetch(
-        `https://webgolfadmin.azurewebsites.net/Website/GetArticleById/${courseID}`,
-        {
-          method: "GET",
-        }
-      )
-        .then((res) => res.json()) // Parse the response to JSON
-        .then(
-          (data) => (
-            setCourseData(data),
-            setInputFields((prev) => ({
-              ...prev,
-              Course: data.title,
-            }))
-          )
-        ) // Log the data
-        .catch((err) => console.log(err));
-    };
-
-    fetchCourses();
+    if (articleContent) {
+      setInputFields((prev) => ({
+        ...prev,
+        Course: articleContent.title,
+      }));
+    }
   }, [courseID]);
 
   const handleSubmit = (e) => {
@@ -303,7 +271,9 @@ const BookingForm = () => {
           <span>&gt;</span>
           <a href={`/courses/${province}`}>{capitalizeFirstLetter(province)}</a>
           <span>&gt;</span>
-          <a href={`/courses/${province}/${courseID}`}>{courseData.title}</a>
+          <a href={`/courses/${province}/${courseID}`}>
+            {articleContent.title}
+          </a>
           <span>&gt;</span>
           <span>Booking</span>
         </Breadcrumbs>
@@ -407,7 +377,7 @@ const BookingForm = () => {
                   You agree with the golfscape <a href="#">Terms of Use</a> by
                   completing this booking.
                 </p>
-                <button type="submit">Book Now for SGD152 (THB4,025)</button>
+                <button>Book Now for SGD152 (THB4,025)</button>
                 <small>You will receive an instant confirmation</small>
               </ReservationInfo>
             </LeftColumn>
@@ -417,11 +387,11 @@ const BookingForm = () => {
           <RightColumn>
             <Summary>
               <img
-                src={images.facility1} // Replace with actual image
+                src={config.base + articleContent.urlImage} // Replace with actual image
                 alt="Golf Course"
               />
-              <h3>{courseData.title}</h3>
-              <p>{courseData.province}</p>
+              <h3>{articleContent.title}</h3>
+              <p>{articleContent.province}</p>
               <BookingDetails>
                 <div>
                   <span>Date:</span>{" "}

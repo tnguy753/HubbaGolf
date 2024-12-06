@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
 import images from "../assets/images";
 import headerData from "../assets/header.json";
-import { fetchMenuData } from "../hook/use-hook";
+import { fetchLocation } from "../hook/use-hook";
+import Dropdown from "./Dropdown";
+import { FaCartShopping } from "react-icons/fa6";
+import { header } from "../assets/header";
 
 const HeaderWrapper = styled.header`
   position: sticky;
@@ -12,19 +16,42 @@ const HeaderWrapper = styled.header`
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 4rem;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.3s ease;
 
-  @media (max-width: 1059px) {
-    padding: 0.5rem 2rem;
+  @media (max-width: 1024px) {
+    padding: 1rem 1.5rem;
   }
+
+  @media (max-width: 768px) {
+    font-size: 1em; /* Mobile */
+  }
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
 `;
 
 const Logo = styled.a`
   img {
-    height: 65px;
+    height: 100px;
+
+    @media (max-width: 1024px) {
+      height: 70px;
+    }
+    @media (max-width: 768px) {
+      height: 60px;
+    }
+
+    // @media (max-width: 1059px) {
+    //   height: 60px;
+    // }
   }
 `;
 
@@ -34,7 +61,8 @@ const HamburgerMenu = styled.div`
   cursor: pointer;
 
   @media (max-width: 1059px) {
-    display: block;
+    display: flex;
+    justify-content: flex-end;
   }
 `;
 
@@ -190,11 +218,100 @@ const Button = styled.a`
   }
 `;
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { menuData } = fetchMenuData();
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+const CartInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
 
+  span {
+    font-size: 1rem;
+    font-weight: bold;
+    @media (max-width: 768px) {
+      font-size: 0.5rem; /* Mobile */
+    }
+  }
+`;
+
+const BottomRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+`;
+
+const InfoItem = styled.a`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--dark);
+  gap: 0.3rem;
+  font-size: 1.3rem;
+
+  .whatsapp {
+    font-size: 1rem;
+  }
+  p {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 900px) {
+    font-size: 1rem;
+
+    p {
+      font-size: 0.7rem;
+    }
+    .whatsapp {
+      font-size: 0.6rem;
+      dislay: none;
+    }
+    .img-whatsapp {
+      width: 25px;
+    }
+  }
+`;
+
+const Box = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  justify-content: flex-end;
+  .mobile-view {
+    display: none;
+  }
+  @media (max-width: 1059px) {
+    .mobile-view {
+      display: flex;
+    }
+  }
+`;
+const Header = () => {
+  const navigate = useNavigate();
+  const [selectedCountry, setSelectedCountry] = useState();
+  const { type, province, provinceID } = useParams();
+
+  const handleSelect = (option) => {
+    setSelectedCountry(option);
+    sessionStorage.setItem("location", option.countryName);
+
+    // Build the path dynamically
+    let path = `/${option.countryName.toLowerCase()}`;
+    if (type) path += `/${type}`;
+    if (province) path += `/${province}`;
+    if (provinceID) path += `/${provinceID}`;
+
+    // Navigate once with the constructed path
+    navigate(path);
+  };
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const { locationData } = fetchLocation();
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleMouseEnter = (index) => setHoveredIndex(index);
   const handleMouseLeave = () => setHoveredIndex(null);
@@ -204,49 +321,78 @@ const Header = () => {
       <Logo href="/">
         <img src={images.logo} alt="Logo" />
       </Logo>
-      <HamburgerMenu onClick={toggleMenu}>
-        {isMenuOpen ? <FaTimes /> : <FaBars />}
-      </HamburgerMenu>
-      <NavBar isOpen={isMenuOpen}>
-        <NavMenu>
-          {menuData.map((menuItem, index) => (
-            <NavItemWrapper
-              key={index}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-            >
-              <NavItem isHovered={hoveredIndex === index}>
-                <a href={menuItem.link}>{menuItem.title}</a>
-                {menuItem.subMenu && <FaChevronDown />}
-              </NavItem>
-              {menuItem.subMenu && (
-                <MegaMenu isVisible={hoveredIndex === index}>
-                  {menuItem.subMenu.map((subMenu, subIndex) => (
-                    <MenuColumn key={subIndex}>
-                      <h4>{subMenu.title}</h4>
-                      <ul>
-                        {subMenu.items.map((item, itemIndex) => (
-                          <li key={itemIndex}>
-                            <a href={`/courses/${item.name.toLowerCase()}`}>
-                              {item.name}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </MenuColumn>
-                  ))}
-                </MegaMenu>
-              )}
-            </NavItemWrapper>
-          ))}
-        </NavMenu>
 
-        {headerData.buttons.map((button, index) => (
-          <Button key={index} href={button.link}>
-            {button.text}
-          </Button>
-        ))}
-      </NavBar>
+      <Wrapper>
+        <Box>
+          {" "}
+          <InfoItem
+            href="https://api.whatsapp.com/send?phone=6590232142"
+            target="_blank"
+            className="mobile-view"
+          >
+            <img src={images.whatsapp} width={45} className="img-whatsapp" />
+            <p className="whatsapp">
+              <strong> WhatsApp Us!</strong>
+            </p>
+          </InfoItem>
+          <HamburgerMenu onClick={toggleMenu}>
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
+          </HamburgerMenu>
+        </Box>
+
+        <NavBar isOpen={isMenuOpen}>
+          <NavMenu>
+            {header.map((menuItem, index) => (
+              <NavItemWrapper
+                key={index}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <NavItem isHovered={hoveredIndex === index}>
+                  <a href={menuItem.link}>{menuItem.title}</a>
+                  {menuItem.subMenu && <FaChevronDown />}
+                </NavItem>
+                {menuItem.subMenu && (
+                  <MegaMenu isVisible={hoveredIndex === index}>
+                    {menuItem.subMenu.map((subMenu, subIndex) => (
+                      <MenuColumn key={subIndex}>
+                        <h4>{subMenu.title}</h4>
+                        <ul>
+                          {subMenu.items.map((item, itemIndex) => (
+                            <li key={itemIndex}>
+                              <a href={`/courses/${item.name.toLowerCase()}`}>
+                                {item.name}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </MenuColumn>
+                    ))}
+                  </MegaMenu>
+                )}
+              </NavItemWrapper>
+            ))}
+          </NavMenu>
+
+          {headerData.buttons.map((button, index) => (
+            <Button key={index} href={button.link}>
+              {button.text}
+            </Button>
+          ))}
+        </NavBar>
+        <BottomRow>
+          <CartInfo>
+            <span>0 Items in cart</span>
+
+            <FaCartShopping size="1.1rem" />
+          </CartInfo>
+          <Dropdown
+            options={locationData}
+            selectedOption={selectedCountry}
+            onSelect={handleSelect}
+          />
+        </BottomRow>
+      </Wrapper>
     </HeaderWrapper>
   );
 };

@@ -1,9 +1,14 @@
 import React from "react";
+import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { newsData } from "../assets/news";
 import Header from "../components/Header";
 import ShareSection from "../sections/ShareSection";
+import { fetchArticle, fetchFacilities } from "../hook/use-hook";
+import { config } from "../assets/config";
+import { Breadcrumbs, Container } from "../components";
+import { getCategoryName } from "../helpers.js";
+import Footer from "../components/Footer.jsx";
 
 const DetailContainer = styled.div`
   display: flex;
@@ -21,27 +26,40 @@ const DetailContainer = styled.div`
 `;
 
 const NewsDetail = () => {
-  const { id } = useParams();
-  const news = newsData.find((news) => news.id === parseInt(id));
+  const { catId, id } = useParams();
+  const { facilitiesData } = fetchFacilities();
+  const { articleContent } = fetchArticle(id);
 
-  if (!news) {
+  if (!articleContent) {
     return <h2>News Not Found</h2>;
   }
 
+  const name = getCategoryName(facilitiesData, catId);
   return (
     <>
       <Header />
-      <DetailContainer>
-        <h1>{news.title}</h1>
-        <span>{news.date}</span>
-        <img
-          src={news.image}
-          alt={news.title}
-          style={{ width: "100%", height: "auto", borderRadius: "10px" }}
-        />
-        <p>{news.content}</p>
-        <ShareSection />
-      </DetailContainer>
+      <Container>
+        <Breadcrumbs>
+          <a href="/">Home</a>
+          <span>&gt;</span>
+          <a href={"/news/" + catId}>{name}</a>
+          <span>&gt;</span>
+          <span>{articleContent.title}</span>
+        </Breadcrumbs>
+        <DetailContainer>
+          <h1>{articleContent.title}</h1>
+          <span>{articleContent.date}</span>
+          <img
+            src={config.base + articleContent.urlImage}
+            alt={articleContent.title}
+            style={{ width: "100%", height: "auto", borderRadius: "10px" }}
+          />
+          {parse(articleContent.content || "")}
+
+          <ShareSection />
+        </DetailContainer>
+      </Container>
+      <Footer />
     </>
   );
 };

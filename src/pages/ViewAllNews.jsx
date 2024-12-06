@@ -1,8 +1,12 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { newsData } from "../assets/news";
 import Header from "../components/Header";
+import { Breadcrumbs, Container } from "../components/index.jsx";
+import { fetchArticlesList, fetchFacilities } from "../hook/use-hook.jsx";
+import { config } from "../assets/config.js";
+import { getCategoryName, formatDate } from "../helpers.js";
 
 const NewsContainer = styled.div`
   display: flex;
@@ -50,7 +54,6 @@ const NewsCard = styled.div`
     font-size: 1.2rem;
     color: #2d3748;
     margin: 10px 0;
-    height: 60px;
   }
 
   p {
@@ -83,24 +86,40 @@ const NewsCard = styled.div`
 `;
 const ViewAllNews = () => {
   const navigate = useNavigate();
+  const { catId } = useParams();
+  const { facilitiesData } = fetchFacilities();
+  const { articles } = fetchArticlesList(catId);
 
   const handleReadMore = (id) => {
-    navigate(`/news/${id}`); // Navigates to a detailed page for the news item
+    navigate(`/blogs/${catId}/${id}`); // Navigates to a detailed page for the news item
   };
+
+  const name = getCategoryName(facilitiesData, catId);
+
   return (
     <>
       <Header />
+      <Container>
+        {" "}
+        <Breadcrumbs>
+          <a href="/">Home</a>
+          <span>&gt;</span>
+
+          <span>Blogs</span>
+        </Breadcrumbs>
+      </Container>
+
       {/* <Heading /> */}
-      <NewsContainer>
-        <Heading>All News</Heading>
+      {/* <NewsContainer>
+        <Heading>{name}</Heading>
         <NewsList>
-          {newsData.map((news) => (
+          {articles?.map((news) => (
             <NewsCard key={news.id}>
-              <img src={news.image} alt={news.title} />
+              <img src={config.base + news.urlImage} alt={news.title} />
               <div>
                 <h3>{news.title}</h3>
-                <p>{news.description}</p>
-                <span>{news.date}</span>
+                <p>{news.summary}</p>
+                <span>{formatDate(news.createdOn)}</span>
                 <button onClick={() => handleReadMore(news.id)}>
                   Read More
                 </button>
@@ -108,7 +127,7 @@ const ViewAllNews = () => {
             </NewsCard>
           ))}
         </NewsList>
-      </NewsContainer>
+      </NewsContainer> */}
     </>
   );
 };

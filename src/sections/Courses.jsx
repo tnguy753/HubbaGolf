@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { SubTitle, Heading, OutlinedButton } from "../components/index";
 import styled from "styled-components";
-
+import { fetchArticlesList } from "../hook/use-hook";
 import { useNavigate } from "react-router-dom";
 import { ListWrapper } from "../components/index";
 import GolfCard from "../components/GolfCard.jsx";
@@ -23,20 +23,20 @@ const CoursesWrapper = styled.section`
 
 const Courses = () => {
   const navigate = useNavigate();
-  const [courseList, setCourseList] = useState([]);
 
-  useEffect(() => {
-    const fetchCourses = () => {
-      fetch(`${config.get_list_article_by_cat_id}?id=9`, {
-        method: "GET",
-      })
-        .then((res) => res.json()) // Parse the response to JSON
-        .then((data) => setCourseList(data)) // Log the data
-        .catch((err) => console.log(err));
-    };
+  const { articles } = fetchArticlesList("9");
+  // useEffect(() => {
+  //   const fetchCourses = () => {
+  //     fetch(`${config.get_list_article_by_cat_id}9`, {
+  //       method: "GET",
+  //     })
+  //       .then((res) => res.json()) // Parse the response to JSON
+  //       .then((data) => setCourseList(data)) // Log the data
+  //       .catch((err) => console.log(err));
+  //   };
 
-    fetchCourses();
-  }, []);
+  //   fetchCourses();
+  // }, []);
 
   return (
     <CoursesWrapper id="courses">
@@ -44,7 +44,7 @@ const Courses = () => {
       <Heading>Let Us Make Your Golf Trip Fantasies Come True</Heading>
 
       <ListWrapper>
-        {courseList.slice(0, 3).map((course, index) => (
+        {articles?.slice(0, 3).map((course, index) => (
           <GolfCard
             key={index}
             img={config.base + course.urlImage}

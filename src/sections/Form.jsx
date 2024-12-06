@@ -3,7 +3,7 @@ import { SubTitle, Heading } from "../components/index";
 import LoadingPage from "../pages/LoadingPage";
 import styled from "styled-components";
 import { InputGroup, FormWrapper } from "../components/index";
-import { Modal } from "../components/Modal";
+import { Modal } from "../components/RepsonseModal";
 import { config } from "../assets/config";
 import images from "../assets/images";
 import { fetchCourseByCountry, fetchLocation } from "../hook/use-hook";
@@ -159,6 +159,7 @@ const DropdownList = styled.ul`
     }
   }
 `;
+
 const FormBooking = () => {
   const [inputFields, setInputFields] = useState({ PlayerNumber: 1 });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -209,7 +210,7 @@ const FormBooking = () => {
 
   useEffect(() => {
     const fetchCourses = (id) => {
-      fetch(`${config.get_course_by_country}?id=${id}`, {
+      fetch(`${config.get_course_by_country}${id}`, {
         method: "GET",
       })
         .then((res) => res.json())

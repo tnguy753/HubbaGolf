@@ -17,25 +17,33 @@ const PageContainer = styled.div`
 
   /* Single column layout for tablets and smaller screens */
   @media (max-width: 768px) {
+    padding: 1rem;
+    gap: 1rem;
     grid-template-columns: 1fr; /* Switch to single column */
   }
 `;
 
 const SectionTitle = styled.h2`
   margin-bottom: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: var(--blue);
   border-bottom: 2px solid var(--blue);
   padding-bottom: 0.5rem;
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const Field = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.75rem;
-
+  font-size: 1rem;
   span {
     font-weight: bold;
+  }
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
   }
 `;
 
@@ -45,6 +53,9 @@ const Value = styled.div`
 
 const DetailsSection = styled.div`
   margin-bottom: 2rem;
+  @media (max-width: 768px) {
+    margin-bottom: 0rem;
+  }
 `;
 
 const OrderDetails = () => {
@@ -88,7 +99,6 @@ const OrderDetails = () => {
               </DetailsSection>
             </div>
             <div>
-              {" "}
               <SectionTitle>Event Details</SectionTitle>
               <DetailsSection>
                 <Field>

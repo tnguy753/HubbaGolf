@@ -19,11 +19,11 @@ const Home = () => {
       <Header />
       <HeroSection />
       <Facilities />
-      <About />
-      <Why />
-      <Courses />
-      <Shop />
-      <FormBooking />
+      {/* <About />
+      <Why /> */}
+      {/* <Courses /> */}
+      {/* <Shop />
+      <FormBooking /> */}
       <Footer />
     </>
   );

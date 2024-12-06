@@ -22,7 +22,7 @@ const LoadingWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
-  z-index: 1000;
+  z-index: 100000;
 `;
 
 // Spinner Style

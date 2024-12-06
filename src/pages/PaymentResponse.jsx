@@ -32,8 +32,10 @@ const PaymentResponse = () => {
           <h1>Thank you for your booking!</h1>
           <p>
             Thank you for booking your tee time! Your reservation
-            <strong> #{orderId}</strong> was successful. We look forward to
-            seeing you on the course.
+            <strong> #OD32323</strong> was successful. We look forward to seeing
+            you on the course.
+            {/* <strong> #{orderId}</strong> was successful. We look forward to
+            seeing you on the course. */}
           </p>
         </Card>
       </Container>

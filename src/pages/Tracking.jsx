@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Breadcrumbs, Container, ColumnForm, InputGroup } from "../components";
-import { Modal } from "../components/Modal";
+import { Modal } from "../components/RepsonseModal";
 import { config } from "../assets/config.js";
 
 const Wrapper = styled.div`
@@ -18,16 +18,11 @@ const TrackingCard = styled.div`
   position: relative;
   z-index: 2;
   background: white;
-  padding: 40px;
+  padding: 2rem;
   border-radius: 12px;
-  width: 90%;
+  width: 100%;
   max-width: 600px;
-
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
-  @media (max-width: 768px) {
-    padding: 20px;
-  }
 `;
 
 const Heading = styled.h1`
@@ -36,6 +31,9 @@ const Heading = styled.h1`
   text-align: center;
   color: #2d3748;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const SubmitButton = styled.button`
