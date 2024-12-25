@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
-const useFetchData = (url, dependencies = [], config = {}) => {
+export const useFetch = (url, dependencies = []) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,19 +9,21 @@ const useFetchData = (url, dependencies = [], config = {}) => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(url, config);
-        setData(response.data); // Axios automatically parses JSON
+        const response = await fetch(url, { method: "GET" });
+        if (!response.ok) {
+          throw new Error(`Error fetching data: ${response.statusText}`);
+        }
+        const result = await response.json();
+        setData(result);
       } catch (err) {
-        setError(err);
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, dependencies); // Triggers refetch when dependencies change
+    if (url) fetchData();
+  }, dependencies);
 
   return { data, isLoading, error };
 };
-
-export default useFetchData;

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
-import images from "../assets/images";
-import headerData from "../assets/header.json";
-import { fetchLocation } from "../hook/use-hook";
-import Dropdown from "./Dropdown";
+import React, { useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
+import { useNavigate, useParams } from "react-router-dom";
+import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
+
+import Dropdown from "./Dropdown";
+import images from "../assets/images";
 import { header } from "../assets/header";
+import { fetchLocation } from "../hook/use-hook";
 
 const HeaderWrapper = styled.header`
   position: sticky;
@@ -27,7 +27,8 @@ const HeaderWrapper = styled.header`
   }
 
   @media (max-width: 768px) {
-    font-size: 1em; /* Mobile */
+    padding: 0.6rem;
+    font-size: 0.5rem; /* Mobile */
   }
 `;
 
@@ -46,7 +47,7 @@ const Logo = styled.a`
       height: 70px;
     }
     @media (max-width: 768px) {
-      height: 60px;
+      height: 70px;
     }
 
     // @media (max-width: 1059px) {
@@ -228,7 +229,7 @@ const CartInfo = styled.div`
     font-size: 1rem;
     font-weight: bold;
     @media (max-width: 768px) {
-      font-size: 0.5rem; /* Mobile */
+      font-size: 0.6rem; /* Mobile */
     }
   }
 `;
@@ -242,6 +243,7 @@ const BottomRow = styled.div`
   @media (max-width: 768px) {
     flex-direction: row-reverse;
     justify-content: flex-end;
+    gap: 0.2rem;
   }
 `;
 
@@ -267,7 +269,7 @@ const InfoItem = styled.a`
       font-size: 0.7rem;
     }
     .whatsapp {
-      font-size: 0.6rem;
+      font-size: 0.8rem;
       dislay: none;
     }
     .img-whatsapp {
@@ -290,10 +292,11 @@ const Box = styled.div`
     }
   }
 `;
+
 const Header = () => {
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState();
-  const { type, province, provinceID } = useParams();
+  const { type, province, provinceID, courseID } = useParams();
 
   const handleSelect = (option) => {
     setSelectedCountry(option);
@@ -304,6 +307,8 @@ const Header = () => {
     if (type) path += `/${type}`;
     if (province) path += `/${province}`;
     if (provinceID) path += `/${provinceID}`;
+    if (courseID)
+      path = `/${option.countryName.toLowerCase()}/global-golf-game-booking`;
 
     // Navigate once with the constructed path
     navigate(path);
@@ -323,7 +328,7 @@ const Header = () => {
       </Logo>
 
       <Wrapper>
-        <Box>
+        <Box style={{ display: "flex", alignItems: "center" }}>
           {" "}
           <InfoItem
             href="https://api.whatsapp.com/send?phone=6590232142"
@@ -374,11 +379,7 @@ const Header = () => {
             ))}
           </NavMenu>
 
-          {headerData.buttons.map((button, index) => (
-            <Button key={index} href={button.link}>
-              {button.text}
-            </Button>
-          ))}
+          <Button href={"/manage-my-booking"}>MANAGE MY BOOKING</Button>
         </NavBar>
         <BottomRow>
           <CartInfo>

@@ -68,56 +68,8 @@ const Facilities = () => {
               />
               <div className="overlay">{facility.facilityName}</div>
             </FacilityCard>
-            // <Card
-            //   key={index}
-            //   onClick={() =>
-            //     navigate(
-            //       `/${location
-            //         .toLocaleLowerCase()
-            //         .replace(/ /g, "-")}/${formatUrlPath(
-            //         facility.facilityName
-            //       )}`
-            //     )
-            //   }
-            // >
-            //   <CardImage
-            //     src={config.base + facility.urlImage}
-            //     alt={facility.facilityName}
-            //   />
-            //   <CardOverlay />
-            //   <CardTitle>{facility.facilityName}</CardTitle>
-            // </Card>
           ))}
       </CardContainer>
-      {/* <CardsWrapper>
-        {courseData
-          .sort((a, b) => a.rank - b.rank)
-          .map((facility, index) => (
-            <Card key={index} delay={index * 0.3}>
-              <ImageWrapper>
-                <img
-                  src={config.base + facility.urlImage}
-                  alt={facility.title}
-                />
-              </ImageWrapper>
-              <CardTitle>{facility.facilityName}</CardTitle>
-              <CardText>{facility.summary}</CardText>
-              <ArrowButton
-                onClick={() =>
-                  navigate(
-                    `/${location
-                      .toLocaleLowerCase()
-                      .replace(/ /g, "-")}/${formatUrlPath(
-                      facility.facilityName
-                    )}`
-                  )
-                }
-              >
-                →
-              </ArrowButton>
-              {/* <ArrowButton onClick={() => handleOpenModal(index)}>
-                →
-              </ArrowButton> */}
     </FacilitiesWrapper>
   );
 };

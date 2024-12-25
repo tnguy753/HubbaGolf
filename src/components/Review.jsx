@@ -164,9 +164,9 @@ const CourseReview = ({ name }) => {
         <Card>
           <Title>Course Facilities</Title>
           <FacilitiesList>
-            <FacilityItem>
+            {/* <FacilityItem>
               <span>⛳</span> Caddies
-            </FacilityItem>
+            </FacilityItem> */}
             <FacilityItem>
               <span>🚗</span> Golf Carts
             </FacilityItem>

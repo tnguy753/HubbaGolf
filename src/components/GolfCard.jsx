@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { FaLocationArrow, FaLocationDot } from "react-icons/fa6";
-import { capitalizeFirstLetter } from "../helpers.js";
+import { FaLocationDot } from "react-icons/fa6";
+import { capitalizeFirstLetter, getCurrency } from "../helpers.js";
 import { Modal } from "../components/RepsonseModal";
 
 const CoursesCard = styled.div.withConfig({
@@ -111,29 +111,32 @@ const CoursesCard = styled.div.withConfig({
     }
   }
 `;
+
 const ImageWrapper = styled.img`
   width: 100%;
   height: 180px;
   object-fit: ${({ shop }) => (shop ? "contain" : "cover")};
 `;
+
 const GolfCard = ({
   img,
   name,
   price,
   province,
-  details,
   id,
   recommended,
   reload,
   isShop,
 }) => {
+  const { type } = useParams();
   const [openModal, setOpenModal] = useState();
   const navigate = useNavigate();
+  const currency = getCurrency();
 
   const handleNavigate = () => {
     const defaultProvince = "singapore";
     const resolvedProvince = province || defaultProvince; // Fallback to "singapore" if province is not defined
-    const path = `/courses/${resolvedProvince.toLowerCase()}/${id}`;
+    const path = `/${resolvedProvince.toLowerCase()}/${type}/${id}`;
 
     if (reload) {
       location.reload();
@@ -144,6 +147,10 @@ const GolfCard = ({
   const handleAddToCart = () => {
     setOpenModal(true);
   };
+  const packages = type.includes("packages");
+  const shopping = type.includes("shopping");
+  const simulator = type.includes("simulator");
+
   return (
     <CoursesCard>
       <ImageWrapper src={img} alt={name} shop={isShop} />
@@ -151,18 +158,23 @@ const GolfCard = ({
 
       <div className="content">
         <h3>{name}</h3>
-        <h4>{price}</h4>
+        <h4>{currency + price}</h4>
 
-        {province && (
-          <div className="location">
-            <FaLocationDot />
-            <p>{capitalizeFirstLetter(province)}</p>
-          </div>
-        )}
-        <p>{details}</p>
+        <div className="location">
+          <FaLocationDot />
+          <p>{capitalizeFirstLetter(province)}</p>
+        </div>
+
+        <p>
+          {packages
+            ? "2 Nights / 3 Rounds"
+            : shopping || simulator
+            ? ""
+            : "7194 yards | Parkland"}
+        </p>
 
         <div className="call-to-action">
-          {isShop ? (
+          {shopping ? (
             <button onClick={handleAddToCart}>Add to Cart</button>
           ) : (
             <button onClick={handleNavigate}>Book</button>

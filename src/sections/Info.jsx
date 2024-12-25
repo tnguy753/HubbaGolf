@@ -50,6 +50,7 @@ const InfoItem = styled.a`
     }
   }
 `;
+
 const Info = () => {
   return (
     <InfoWrapper>

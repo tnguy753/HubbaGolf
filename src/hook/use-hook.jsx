@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
+import { useFetch } from "./use-fetch.jsx";
+import { useParams } from "react-router-dom";
 import { config } from "../assets/config";
+import {
+  capitalizeFirstLetter,
+  getCountryID,
+  removeHash,
+  getCategoryID,
+  formatUrlPath,
+  getCurrency,
+} from "../helpers.js";
 
 export const fetchBanner = () => {
   const [bannerImg, setBannerImg] = useState([]);
@@ -52,6 +62,27 @@ export const fetchFacilities = () => {
   return { facilitiesData };
 };
 
+export const useArticlesList = (provinceID) => {
+  const {
+    data: articles,
+    isLoading,
+    error,
+  } = useFetch(
+    provinceID ? `${config.get_list_article_by_cat_id}${provinceID}` : null,
+    [provinceID]
+  );
+  return { articles, isLoading, error };
+};
+
+export const useFacilities = () => {
+  const {
+    data: facilitiesData,
+    isLoading,
+    error,
+  } = useFetch(config.get_facilities_article, []);
+  return { facilitiesData, isLoading, error };
+};
+
 export const fetchLocation = () => {
   const [locationData, setLocationData] = useState([]);
 
@@ -86,13 +117,14 @@ export const fetchCourseByCountry = () => {
   return { courseData };
 };
 
-export const fetchArticlesList = (id) => {
+export const fetchArticlesList = () => {
+  const { provinceID } = useParams();
   const [articles, setArticles] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      fetch(`${config.get_list_article_by_cat_id}${id}`, {
+      fetch(`${config.get_list_article_by_cat_id}${provinceID}`, {
         method: "GET",
       })
         .then((res) => res.json()) // Parse the response to JSON
@@ -101,7 +133,7 @@ export const fetchArticlesList = (id) => {
         .catch((err) => console.log(err));
     };
     fetchData();
-  }, [id]);
+  }, [provinceID]);
   return { articles, isLoading };
 };
 
@@ -154,5 +186,93 @@ export const fetchAllCourse = (typeID, countryId) => {
     };
     fetchData();
   }, [countryId]);
+  return { courses, isLoading };
+};
+
+export const useCourseData = () => {
+  const { country, type } = useParams();
+  const { data: locationData } = useFetch(config.get_locations);
+  const { data: facilitiesData } = useFetch(config.get_facilities_article);
+
+  const [courses, setCourses] = useState([]);
+  const [typeID, setTypeID] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const countryId = locationData ? getCountryID(locationData, country) : null;
+
+  useEffect(() => {
+    if (facilitiesData) {
+      const categoryID = getCategoryID(
+        facilitiesData,
+        capitalizeFirstLetter(removeHash(type))
+      );
+      setTypeID(categoryID);
+    }
+  }, [facilitiesData, type]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      if (countryId && typeID !== null) {
+        try {
+          setIsLoading(true);
+          const response = await fetch(
+            `${config.get_all_course}typeId=${typeID}&countryId=${countryId}`
+          );
+          const data = await response.json();
+          setCourses(data);
+        } catch (error) {
+          console.error("Error fetching courses:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+    fetchCourses();
+  }, [countryId, typeID]);
+
+  return { courses, isLoading };
+};
+
+export const useRelatedCourseData = () => {
+  const { country, type } = useParams();
+  const { data: locationData } = useFetch(config.get_locations);
+  const { data: facilitiesData } = useFetch(config.get_facilities_article);
+
+  const [courses, setCourses] = useState([]);
+  const [typeID, setTypeID] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const countryId = locationData ? getCountryID(locationData, country) : null;
+
+  useEffect(() => {
+    if (facilitiesData) {
+      const categoryID = getCategoryID(
+        facilitiesData,
+        capitalizeFirstLetter(removeHash(type))
+      );
+      setTypeID(categoryID);
+    }
+  }, [facilitiesData, type]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      if (countryId && typeID !== null) {
+        try {
+          setIsLoading(true);
+          const response = await fetch(
+            `${config.get_all_course}typeId=${typeID}&countryId=${countryId}`
+          );
+          const data = await response.json();
+          setCourses(data);
+        } catch (error) {
+          console.error("Error fetching courses:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+    fetchCourses();
+  }, [countryId, typeID]);
+
   return { courses, isLoading };
 };

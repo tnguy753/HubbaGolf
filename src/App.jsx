@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import ViewAllNews from "./pages/ViewAllNews";
+// import ViewAllNews from "./pages/ViewAllNews";
 import NewsDetail from "./pages/NewsDetail";
 import ContactPage from "./pages/Contact";
 import ViewAllCourses from "./pages/ViewAllCourses";
@@ -12,6 +12,7 @@ import OrderDetails from "./pages/OrderDetails";
 import PaymentResponse from "./pages/PaymentResponse";
 import ViewAllCoursesByProvince from "./pages/ViewAllCoursesByProvince";
 import PaymentStripe from "./pages/PaymentStripe";
+
 const App = () => {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -32,10 +33,7 @@ const App = () => {
           path="/:country/:type/:province/:provinceID"
           element={<ViewAllCoursesByProvince />}
         />
-        <Route
-          path="/courses/:province/:courseID"
-          element={<GolfCoursePage />}
-        />
+        <Route path="/:country/:type/:courseID" element={<GolfCoursePage />} />
 
         <Route
           path="/courses/:province/:courseID/booking"
@@ -45,7 +43,7 @@ const App = () => {
         <Route path="/manage-my-booking/:orderId" element={<OrderDetails />} />
 
         {/* News Page */}
-        <Route path="/blogs" element={<ViewAllNews />} />
+        {/* <Route path="/blogs" element={<ViewAllNews />} /> */}
         <Route path="/blogs/:catId/:id" element={<NewsDetail />} />
       </Routes>
     </Router>

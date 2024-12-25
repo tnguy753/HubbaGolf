@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { LocationModal } from "../components/LocationModal";
 import { fetchBanner } from "../hook/use-hook";
 import { config } from "../assets/config";
+import { Container } from "../components";
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -26,6 +27,10 @@ const HeroSlide = styled.div`
     height: 35vh;
   }
 
+  @media (max-width: 768px) {
+    height: 18vh;
+  }
+
   .content {
     display: flex;
     flex-direction: column;
@@ -41,6 +46,7 @@ const HeroSlide = styled.div`
 
       @media (max-width: 768px) {
         font-size: 1.5rem;
+        margin-bottom: 0.2rem;
       }
     }
 
@@ -53,6 +59,7 @@ const HeroSlide = styled.div`
       @media (max-width: 768px) {
         font-size: 0.8rem;
         max-width: 60%;
+        margin-bottom: 1rem;
       }
     }
   }
@@ -96,6 +103,16 @@ const HeroSection = () => {
     </Arrow>
   );
 
+  const BannerContainer = styled(Container)`
+    padding-top: 0;
+    padding-bottom: 0;
+
+    gap: 0rem;
+    @media (max-width: 1024px) {
+      padding: 0rem;
+    }
+  `;
+
   const sliderSettings = {
     infinite: true,
     speed: 500,
@@ -109,24 +126,26 @@ const HeroSection = () => {
   };
 
   return (
-    <CarouselWrapper>
+    <BannerContainer>
       <LocationModal
         isOpen={isModalOpen}
         message="22"
         type="success"
         onClose={() => setIsModalOpen(false)}
       />
-      <Slider {...sliderSettings}>
-        {bannerImg.map((slide) => (
-          <HeroSlide key={slide.id} image={`${config.base}${slide.urlImage}`}>
-            <div className="content">
-              <h1>{slide.title}</h1>
-              <p>{slide.description}</p>
-            </div>
-          </HeroSlide>
-        ))}
-      </Slider>
-    </CarouselWrapper>
+      <CarouselWrapper>
+        <Slider {...sliderSettings}>
+          {bannerImg.map((slide) => (
+            <HeroSlide key={slide.id} image={`${config.base}${slide.urlImage}`}>
+              <div className="content">
+                <h1>{slide.title}</h1>
+                <p>{slide.description}</p>
+              </div>
+            </HeroSlide>
+          ))}
+        </Slider>
+      </CarouselWrapper>
+    </BannerContainer>
   );
 };
 

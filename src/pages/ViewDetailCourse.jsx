@@ -1,22 +1,28 @@
 import parse from "html-react-parser";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import ArticleSlider from "../components/ArticleSlider.jsx";
+import {
+  removeHash,
+  getCurrency,
+  getTypeName,
+  capitalizeFirstLetter,
+} from "../helpers.js";
+import { config } from "../assets/config.js";
+import { fetchArticle, useArticlesList } from "../hook/use-hook";
 
-import Info from "../components/Info.jsx";
+import Info from "../sections/Info";
 import Header from "../components/Header";
-
+import LoadingPage from "./LoadingPage.jsx";
+import Footer from "../components/Footer.jsx";
+import GolfCard from "../components/GolfCard.jsx";
 import { ActionButton } from "./ViewAllCourses.jsx";
 import CourseReview from "../components/Review.jsx";
 import BookingSection from "../components/BookingSection";
 import { Breadcrumbs, CardList } from "../components/index.jsx";
-import { config } from "../assets/config.js";
-import { capitalizeFirstLetter, getCurrency } from "../helpers.js";
-import { fetchArticle, fetchArticlesList } from "../hook/use-hook";
-import GolfCard from "../components/GolfCard.jsx";
-import Footer from "../components/Footer.jsx";
-import LoadingPage from "./LoadingPage.jsx";
-import ItinerarySection from "../components/ItinerarySection.jsx";
+import ItinerarySection from "../components/Packages/ItinerarySection.jsx";
+import DetailedSimulator from "../components/Simulator/DetailedSimulator.jsx";
 
 const PageWrapper = styled.section`
   padding: 2rem;
@@ -187,25 +193,24 @@ const RightColumn = styled.div`
 `;
 
 const GolfCoursePage = () => {
-  const { province, courseID } = useParams();
+  const { country, type, courseID } = useParams();
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const { articleContent } = fetchArticle(courseID);
+  const { articleContent, isLoading } = fetchArticle(courseID);
+  const typeName = useMemo(() => getTypeName(type), [type]);
+  const packages = type.includes("packages");
+  const simulator = type.includes("simulator");
   const [typeID, setTypeID] = useState(null);
-  const { articles, isLoading } = fetchArticlesList(typeID);
-  const facilityID = articleContent.type;
-  const currency = getCurrency();
+  const { articles } = useArticlesList(typeID);
+  const relatedArticles = articles?.filter(
+    (i) => i.type == articleContent.type && i.id != courseID
+  );
+
   useEffect(() => {
     if (articleContent?.categoryId) {
       setTypeID(articleContent.categoryId);
     }
   }, [articleContent]);
-
-  const typeName =
-    facilityID == 27
-      ? "Travel Packages"
-      : facilityID == 28
-      ? "Golf Equipment"
-      : "Golf Courses"; // Default type
+  const currency = getCurrency();
 
   if (isLoading) {
     return <LoadingPage />;
@@ -226,94 +231,96 @@ const GolfCoursePage = () => {
         <Breadcrumbs>
           <a href="/">Home</a>
           <span>&gt;</span>
-          <a href={`/${province}`}>{capitalizeFirstLetter(province)}</a>
+          <a href={`/${country}`}>{capitalizeFirstLetter(country)}</a>
+          <span>&gt;</span>
+          <a href={`/${country}/${type}`}>
+            {capitalizeFirstLetter(removeHash(type))}
+          </a>
           <span>&gt;</span>
           <span>{articleContent.title}</span>
         </Breadcrumbs>
+        {simulator ? (
+          <DetailedSimulator />
+        ) : (
+          <Layout>
+            <LeftColumn>
+              {articleContent?.lstUrlImage?.length > 1 ? (
+                <ArticleSlider
+                  articleContent={{
+                    lstUrlImage: articleContent.lstUrlImage,
+                  }}
+                />
+              ) : (
+                <ImageWrapper
+                  shop={articleContent.type == 28 ? "shop" : undefined}
+                  src={config.base + articleContent.urlImage}
+                  alt={articleContent.title}
+                />
+              )}
 
-        {/* Main Content */}
-        <Layout>
-          {/* Left Column */}
-          <LeftColumn>
-            <ImageWrapper
-              shop={articleContent.type == 28 ? "shop" : undefined}
-              src={config.base + articleContent.urlImage}
-              alt={articleContent.title}
-            />
-
-            {/* {articleContent && parse(articleContent?.content)} */}
-            <div className="description-wrapper">
-              <div
-                className={`description ${
-                  showFullDescription ? "expanded" : ""
-                }`}
-              >
-                {/* {JSON.stringify(articleContent.content)} */}
-                {parse(articleContent.content || "")}
-                {/* {articleContent.summary} */}
+              <div className="description-wrapper">
+                <div
+                  className={`description ${
+                    showFullDescription ? "expanded" : ""
+                  }`}
+                >
+                  {parse(articleContent.content || "")}
+                </div>
+                <br />
+                <ActionButton
+                  onClick={toggleDescription}
+                  style={{
+                    background: "white",
+                    border: "2px #008080 solid",
+                    color: "#008080",
+                  }}
+                >
+                  {showFullDescription ? "Read Less " : "Read More +"}
+                </ActionButton>
               </div>
-              <br />
-              <ActionButton
-                onClick={toggleDescription}
-                style={{
-                  background: "white",
-                  border: "2px #008080 solid",
-                  color: "#008080",
-                }}
-              >
-                {showFullDescription ? "Read Less " : "Read More +"}
-              </ActionButton>
-            </div>
-            <h2 className="course-review-title">
-              {articleContent.title} - Course Reviews
-            </h2>
-            <CourseReview name={`${articleContent.title}- "Course Reviews"`} />
-          </LeftColumn>
-
-          {/* Right Column */}
-          <RightColumn>
-            {facilityID == 27 ? (
-              <ItinerarySection />
-            ) : (
-              <BookingSection
-                price={currency + "120"}
-                // price={articleContent.price}
-                city={province}
-                id={articleContent.id}
-                name={articleContent.title}
+              <h2 className="course-review-title">
+                {articleContent.title} - Course Reviews
+              </h2>
+              <CourseReview
+                name={`${articleContent.title}- "Course Reviews"`}
               />
-            )}
-          </RightColumn>
-        </Layout>
-        {/* Related Courses */}
-        <div className="related-courses">
-          <h2>Related {typeName}</h2>
-          <CardList>
-            {articles
-              ?.filter((i) => i.type == articleContent.type && i.id != courseID)
-              .map((item, index) => (
+            </LeftColumn>
+
+            {/* Right Column */}
+            <RightColumn>
+              {packages ? (
+                <ItinerarySection />
+              ) : (
+                <BookingSection
+                  price={currency + "120"}
+                  // price={articleContent.price}
+                  city={country}
+                  id={articleContent.id}
+                  name={articleContent.title}
+                />
+              )}
+            </RightColumn>
+          </Layout>
+        )}
+
+        {relatedArticles?.length > 0 && (
+          <div className="related-courses">
+            <h2>Related {typeName}</h2>
+            <CardList>
+              {relatedArticles?.slice(0, 3).map((item, index) => (
                 <GolfCard
                   reload
                   key={index}
                   img={`${config.base}${item.urlImage}`} // Build image URL
                   name={item.title}
                   price={currency + "120"}
-                  province={
-                    facilityID == 27 || facilityID == 28 ? "" : province
-                  }
+                  province={country}
                   id={item.id}
-                  isShop={facilityID == 28 ? "true" : undefined}
-                  details={
-                    facilityID == 27
-                      ? "2 Nights / 3 Rounds"
-                      : facilityID == 28
-                      ? ""
-                      : "7194 yards | Parkland"
-                  }
                 />
               ))}
-          </CardList>
-        </div>
+            </CardList>
+          </div>
+        )}
       </PageWrapper>
       <Footer />
     </>

@@ -77,3 +77,19 @@ export function getCategoryID(data, name) {
     return cat.categoryId;
   }
 }
+
+const typeNameMapping = {
+  packages: "Travel Packages",
+  shopping: "Golf Equipment",
+  simulator: "Golf Simulator",
+  default: "Golf Courses", // Fallback
+};
+
+export const getTypeName = (type) => {
+  for (const key in typeNameMapping) {
+    if (type.includes(key)) {
+      return typeNameMapping[key];
+    }
+  }
+  return typeNameMapping.default; // Return default if no match is found
+};

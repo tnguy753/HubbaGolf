@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBolt, FaHeart, FaUndoAlt } from "react-icons/fa";
 import { getCurrency } from "../helpers.js";
+
 const BookingWrapper = styled.div`
   background: #f5f5f5;
   border-radius: 0.5rem;
@@ -287,8 +288,8 @@ const BookingSection = ({ price, city, id, name }) => {
             <label htmlFor="PlayerNumber">No. of players:</label>
             <select id="PlayerNumber" defaultValue={"1"}>
               {Array.from({ length: 8 }, (_, i) => (
-                <option key={i} value={i}>
-                  {i}
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
                 </option>
               ))}
             </select>
@@ -297,18 +298,22 @@ const BookingSection = ({ price, city, id, name }) => {
           <Option>
             <RadioGroup>
               <RadioLabel>
-                <input type="radio" name="options" value="option1" checked />
-                <span>18 Holes + Caddie + Shared Cart (Early Start)</span>
+                <input
+                  type="radio"
+                  name="options"
+                  value="option1"
+                  defaultChecked
+                />
+                <span>18 Holes + Shared Cart (Early Start)</span>
               </RadioLabel>
             </RadioGroup>
           </Option>
           <Option>
             <RadioGroup>
               <RadioLabel>
-                <input type="radio" name="options" value="option1" checked />
+                <input type="radio" name="options" value="option1" />
                 <span>
-                  18 Holes + Caddie + Cart + Meals {currency}4,700 6:30am -
-                  14:30pm
+                  18 Holes + Cart + Meals {currency}152 6:30am - 14:30pm
                 </span>
               </RadioLabel>
             </RadioGroup>
@@ -384,15 +389,12 @@ const BookingSection = ({ price, city, id, name }) => {
           </div>
           <h4>Total per person</h4>
           <div className="price">
-            <span> SGD 4,700 </span>
+            <span> SGD 152 </span>
           </div>
           <h4>Booking Total</h4>{" "}
           <div className="price">
-            <span> {currency} 9,400 </span>
+            <span> {currency} 152 </span>
           </div>
-          {/* <button onClick={() => navigate(`/courses/${city}/${id}/booking`)}>
-        Book Now
-      </button> */}
           <button onClick={() => navigate(`/payment`)}>Book Now</button>
           <div className="info">
             <div>

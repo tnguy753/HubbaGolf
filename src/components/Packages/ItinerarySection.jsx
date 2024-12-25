@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import data from "../assets/itinerary.json";
-import { getCurrency } from "../helpers.js";
+import data from "../../assets/itinerary.json";
 import { useNavigate } from "react-router-dom";
+
 const Wrapper = styled.div`
   background: #f5f5f5;
   border-radius: 0.5rem;
@@ -48,6 +48,7 @@ const Title = styled.div`
     padding: 1rem;
   }
 `;
+
 const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -64,11 +65,11 @@ const ItinerarySection = () => {
       <Wrapper>
         <Title>Itinerary</Title>
         <Content>
-          {data.itinerary.map((i) => (
-            <>
+          {data.itinerary.map((i, index) => (
+            <div key={index}>
               <h4>{i.title}</h4>
               <p>{i.subtitle}</p>
-            </>
+            </div>
           ))}
           <button onClick={() => navigate(`/payment`)}>Book Now</button>
         </Content>

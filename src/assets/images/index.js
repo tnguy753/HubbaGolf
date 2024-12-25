@@ -15,6 +15,10 @@ import shop2 from "./shop-2.png";
 import shop3 from "./shop-3.png";
 import shop4 from "./shop-4.png";
 
+import sim1 from "./x1.jpg";
+import sim2 from "./x2.jpg";
+import sim3 from "./x3.jpg";
+
 const images = {
   logo,
   checked,
@@ -30,6 +34,10 @@ const images = {
   facility5,
   facility6,
   facility7,
+
+  sim1,
+  sim2,
+  sim3,
 
   formImg,
   whatsapp,

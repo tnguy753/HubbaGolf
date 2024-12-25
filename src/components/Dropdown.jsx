@@ -6,7 +6,7 @@ const DropdownWrapper = styled.div`
   width: 210px;
 
   @media (max-width: 768px) {
-    width: 100px;
+    width: 85px;
   }
 `;
 
@@ -24,7 +24,7 @@ const SelectedOption = styled.div`
 
   /* Ensure proper truncation on mobile */
   @media (max-width: 768px) {
-    font-size: 0.6rem; /* Mobile font size */
+    font-size: 0.7rem; /* Mobile font size */
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
