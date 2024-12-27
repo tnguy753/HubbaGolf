@@ -12,6 +12,7 @@ import OrderDetails from "./pages/OrderDetails";
 import PaymentResponse from "./pages/PaymentResponse";
 import ViewAllCoursesByProvince from "./pages/ViewAllCoursesByProvince";
 import PaymentStripe from "./pages/PaymentStripe";
+import Shop from "./ecommerce/Shop";
 
 const App = () => {
   return (
@@ -45,6 +46,8 @@ const App = () => {
         {/* News Page */}
         {/* <Route path="/blogs" element={<ViewAllNews />} /> */}
         <Route path="/blogs/:catId/:id" element={<NewsDetail />} />
+
+        <Route path="/shop" element={<Shop />} />
       </Routes>
     </Router>
   );

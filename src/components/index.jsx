@@ -294,3 +294,19 @@ export const CardList = styled.div`
     grid-template-columns: 1fr;
   }
 `;
+
+export const TitleBar = styled.div`
+  padding: 1rem 4rem;
+  background-color: var(--blue);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  @media (max-width: 1024px) {
+    padding: 1rem 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1em; /* Mobile */
+  }
+`;

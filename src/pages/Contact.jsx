@@ -57,6 +57,7 @@ const FooterText = styled.p`
   color: #a0aec0;
   margin-top: 20px;
 `;
+
 const ContactPage = () => {
   const [formFields, setFormFields] = useState({
     name: "",

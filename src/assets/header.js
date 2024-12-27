@@ -9,7 +9,7 @@ export const header = [
   },
   {
     title: "Shop",
-    link: "/singapore/golf-equipment-shopping",
+    link: "/shop",
   },
   {
     title: "Booking",

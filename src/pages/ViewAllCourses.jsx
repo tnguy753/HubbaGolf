@@ -112,7 +112,7 @@ const ViewAllCourses = () => {
   const { country, type } = useParams();
   const { courses, isLoading } = useCourseData();
   const typeName = useMemo(() => getTypeName(type), [type]);
-  console.log(courses);
+
   if (isLoading || !courses) {
     return <LoadingPage />;
   }
