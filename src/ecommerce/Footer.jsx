@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaWhatsapp } from "react-icons/fa";
-import { FiPhone } from 'react-icons/fi';
+import { FiPhone } from "react-icons/fi";
 import { InputGroup } from "../components";
 
 const FooterContainer = styled.footer`
@@ -43,13 +43,14 @@ const Section = styled.div`
   }
 
   @media (max-width: 768px) {
+    padding: 0rem;
     align-items: center;
     text-align: center;
     border: none;
 
     &:not(:last-child) {
-        border-right: none;
-      }
+      border-right: none;
+    }
   }
 `;
 
@@ -58,10 +59,15 @@ const Heading = styled.h1`
   font-weight: bold;
   color: #2d3748;
   margin-bottom: 20px;
+
+  @media (max-width: 765px) {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const SubmitButton = styled.button`
-  width: 170px;
+  width: 200px;
   display: inline-block;
   padding: 5px 0px;
   font-size: 0.9rem;
@@ -85,6 +91,7 @@ const ColumnForm = styled.form`
   gap: 20px;
 
   @media (max-width: 768px) {
+    gap: 8px;
     align-items: center;
     text-align: center;
   }
@@ -117,7 +124,7 @@ const Footer = () => {
       <FooterWrapper>
         <Section>
           <Heading>Contact Us</Heading>
-          <ColumnForm >
+          <ColumnForm>
             <InputGroup>
               <p htmlFor="name">Your Name</p>
               <input
@@ -153,7 +160,10 @@ const Footer = () => {
         </Section>
         <Section>
           <Heading>Sale enquiries</Heading>
-          <p>Get in touch with our sales team to discuss the best options for your business.</p>
+          <p>
+            Get in touch with our sales team to discuss the best options for
+            your business.
+          </p>
           <SubmitButton type="submit">Get in touch with us</SubmitButton>
           <p>or send us an email</p>
           <p>info@example.com</p>
@@ -161,12 +171,18 @@ const Footer = () => {
         <Section>
           <Heading>Find us at</Heading>
           <p>Call us for more information.</p>
-          <p><FiPhone /> 02309230233</p>
-          <p><FaWhatsapp /> 02309230233</p>
+          <p>
+            <FiPhone /> 02309230233
+          </p>
+          <p>
+            <FaWhatsapp /> 02309230233
+          </p>
           <br></br>
           <p>
-            Address<br />
-            (480) 555-0103<br />
+            Address
+            <br />
+            (480) 555-0103
+            <br />
             285 Great North Road, Grey Lynn, Auckland 1021
           </p>
         </Section>

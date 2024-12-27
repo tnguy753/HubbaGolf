@@ -53,13 +53,15 @@ const Facilities = () => {
             <FacilityCard
               key={index}
               onClick={() =>
-                navigate(
-                  `/${(location || "singapore")
-                    .toLowerCase()
-                    .replace(/ /g, "-")}/${formatUrlPath(
-                    facility.facilityName
-                  )}`
-                )
+                facility.facilityName.includes("Shopping")
+                  ? navigate("/shop")
+                  : navigate(
+                      `/${(location || "singapore")
+                        .toLowerCase()
+                        .replace(/ /g, "-")}/${formatUrlPath(
+                        facility.facilityName
+                      )}`
+                    )
               }
             >
               <img

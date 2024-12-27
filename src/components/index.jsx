@@ -73,6 +73,25 @@ export const ContainedButton = styled.button`
   }
 `;
 
+export const RoundedButton = styled.button`
+  padding: 0.5rem 2rem;
+  font-size: 0.8rem;
+  color: white;
+  background-color: var(--blue);
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: fit-content;
+  width: fit-content;
+  &:hover {
+    background-color: var(--darkblue);
+  }
+  @media (max-width: 768px) {
+    padding: 0.5rem 2rem;
+  }
+`;
+
 export const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -117,6 +136,9 @@ export const InputGroup = styled.div`
   textarea {
     resize: none;
     height: 100px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 

@@ -293,7 +293,7 @@ const Box = styled.div`
   }
 `;
 
-const Header = () => {
+const Header = ({ isShop }) => {
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState();
   const { type, province, provinceID, courseID } = useParams();
@@ -381,7 +381,8 @@ const Header = () => {
 
           <Button href={"/manage-my-booking"}>MANAGE MY BOOKING</Button>
         </NavBar>
-        <BottomRow>
+
+        <BottomRow style={{ display: isShop ? "none" : "" }}>
           <CartInfo>
             <span>0 Items in cart</span>
 
